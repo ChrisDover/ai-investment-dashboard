@@ -9,6 +9,9 @@ import ThesisValidation from './components/ThesisValidation';
 import AlertsPanel from './components/AlertsPanel';
 import TradingSignals from './components/TradingSignals';
 import PortfolioPerformance from './components/PortfolioPerformance';
+import NewsIntegration from './components/NewsIntegration';
+import ScenarioTesting from './components/ScenarioTesting';
+import CompanyDeepDives from './components/CompanyDeepDives';
 
 const DashboardContainer = styled.div`
   background: #0a0a0a;
@@ -72,7 +75,7 @@ function App() {
     <DashboardContainer>
       <Header>
         <Title>AI INVESTMENT DASHBOARD</Title>
-        <Subtitle>Actionable Investment Intelligence | Thesis Validation | Alert System | Performance Tracking</Subtitle>
+        <Subtitle>Alerts | Thesis Validation | Trading Signals | News | Scenarios | Deep Dives | Performance Tracking</Subtitle>
       </Header>
 
       <GridContainer>
@@ -91,6 +94,19 @@ function App() {
 
         <FullWidthSection>
           <PortfolioPerformance />
+        </FullWidthSection>
+
+        {/* Phase 2: Deep Research & Scenario Analysis */}
+        <FullWidthSection>
+          <NewsIntegration />
+        </FullWidthSection>
+
+        <FullWidthSection>
+          <ScenarioTesting />
+        </FullWidthSection>
+
+        <FullWidthSection>
+          <CompanyDeepDives />
         </FullWidthSection>
 
         {/* Core Tracking */}
