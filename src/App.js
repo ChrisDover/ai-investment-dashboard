@@ -12,6 +12,8 @@ import PortfolioPerformance from './components/PortfolioPerformance';
 import NewsIntegration from './components/NewsIntegration';
 import ScenarioTesting from './components/ScenarioTesting';
 import CompanyDeepDives from './components/CompanyDeepDives';
+import BLUF from './components/BLUF';
+import DailyExecutiveSummary from './components/DailyExecutiveSummary';
 
 const DashboardContainer = styled.div`
   background: #0a0a0a;
@@ -79,37 +81,47 @@ function App() {
       </Header>
 
       <GridContainer>
-        {/* Phase 1: Actionable Intelligence */}
+        {/* PRIORITY 1: Instant Actionable Intelligence */}
         <FullWidthSection>
-          <AlertsPanel />
+          <BLUF />
         </FullWidthSection>
 
         <FullWidthSection>
-          <ThesisValidation />
+          <DailyExecutiveSummary />
+        </FullWidthSection>
+
+        {/* PRIORITY 2: Critical Alerts & Trading Signals */}
+        <FullWidthSection>
+          <AlertsPanel />
         </FullWidthSection>
 
         <FullWidthSection>
           <TradingSignals />
         </FullWidthSection>
 
+        {/* PRIORITY 3: Performance & Thesis Validation */}
         <FullWidthSection>
           <PortfolioPerformance />
         </FullWidthSection>
 
-        {/* Phase 2: Deep Research & Scenario Analysis */}
         <FullWidthSection>
-          <NewsIntegration />
+          <ThesisValidation />
         </FullWidthSection>
 
+        {/* PRIORITY 4: Deep Research & Intelligence */}
         <FullWidthSection>
-          <ScenarioTesting />
+          <NewsIntegration />
         </FullWidthSection>
 
         <FullWidthSection>
           <CompanyDeepDives />
         </FullWidthSection>
 
-        {/* Core Tracking */}
+        <FullWidthSection>
+          <ScenarioTesting />
+        </FullWidthSection>
+
+        {/* PRIORITY 5: Long-term Tracking & Context */}
         <FullWidthSection>
           <AGIProgressTracker />
         </FullWidthSection>
