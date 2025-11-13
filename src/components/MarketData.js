@@ -85,23 +85,23 @@ const MarketData = () => {
     defensive: []
   });
 
-  const stockNames = {
-    'NVDA': 'Nvidia',
-    'TSM': 'TSMC',
-    'AMD': 'AMD',
-    'ASML': 'ASML',
-    'MU': 'Micron',
-    'MSFT': 'Microsoft',
-    'GOOGL': 'Google',
-    'VRT': 'Vertiv',
-    'ETN': 'Eaton',
-    'EQT': 'EQT Corp',
-    'SPY': 'S&P 500',
-    'GLD': 'Gold',
-    'BTC-USD': 'Bitcoin'
-  };
-
   useEffect(() => {
+    const stockNames = {
+      'NVDA': 'Nvidia',
+      'TSM': 'TSMC',
+      'AMD': 'AMD',
+      'ASML': 'ASML',
+      'MU': 'Micron',
+      'MSFT': 'Microsoft',
+      'GOOGL': 'Google',
+      'VRT': 'Vertiv',
+      'ETN': 'Eaton',
+      'EQT': 'EQT Corp',
+      'SPY': 'S&P 500',
+      'GLD': 'Gold',
+      'BTC-USD': 'Bitcoin'
+    };
+
     const fetchMarketData = async () => {
       try {
         setLoading(true);

@@ -168,7 +168,7 @@ const DailyExecutiveSummary = () => {
   const today = new Date();
   const dateString = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [stats, setStats] = useState([
     { label: 'Portfolio YTD', value: '0%', change: '0%', positive: true, color: '#00ff00' },
     { label: 'vs SPY', value: '0%', change: 'Alpha', positive: true, color: '#ff6b00' },
