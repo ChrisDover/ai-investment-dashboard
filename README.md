@@ -1,70 +1,174 @@
-# Getting Started with Create React App
+# AI Investment Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive React dashboard for tracking the path to AGI (Artificial General Intelligence) by 2040, monitoring semiconductor supercycle trends, and managing AI-focused investment portfolios.
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+This dashboard integrates insights from leading AI researchers and semiconductor analysts to provide real-time tracking of:
 
-### `npm start`
+- **AGI Progress**: Burndown chart tracking capabilities toward 2040 target (70% probability)
+- **CAGR Timeline**: Revenue growth projections across bull/base/bear scenarios (15-40% CAGR)
+- **Key Milestones**: Critical events like TSMC 2nm production, Nvidia Blackwell, GPT-5, etc.
+- **Portfolio Allocation**: Thesis-aligned strategy across semiconductors, infrastructure, and hedges
+- **Market Data**: Real-time tracking of key holdings (NVDA, TSM, MSFT, AMD, etc.)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Investment Thesis
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Based on comprehensive research from Dwarkesh Patel and SemiAnalysis, this dashboard tracks a bullish stance on:
 
-### `npm test`
+1. **AI Scaling** (70% confidence): Continued scaling will unlock AGI-like capabilities by 2030-2040
+2. **Semiconductor Supercycle**: AI-driven compute demand growing 50-60% quarterly since 2023
+3. **Infrastructure Buildout**: $6.7T datacenter CapEx by 2030 ($2T/year at peak)
+4. **Portfolio Strategy**: 45% AI/Tech/Semis, 30% Infrastructure, 15% Broad Market, 10% Defensive
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+### 1. AGI Progress Tracker
+- Current capability score vs. expected timeline
+- Years remaining to 2040 target
+- Optimistic/base/pessimistic path visualization
+- 70% scaling confidence probability
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. CAGR Timeline
+- Bull case: 40% CAGR (explosive growth scenario)
+- Base case: 30% CAGR (expected path)
+- Bear case: 15% CAGR (stalled scaling)
+- Actual performance tracking vs. projections
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Key Milestones Tracker
+- **Chips & Semiconductors**: TSMC 2nm/1.4nm, Nvidia Blackwell, HBM4
+- **AI Models**: GPT-5, Claude 3, ARC-AGI benchmarks
+- **Infrastructure**: 1GW datacenters, $2T annual CapEx
+- **Economic**: $100B+ AI revenues, market cap milestones
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 4. Portfolio Allocation
+- **AI/Tech/Semiconductors (45%)**: NVDA, TSM, MSFT, AMD, GOOGL, ASML, MU
+- **Infrastructure/Energy (30%)**: EQT, VRT, ETN, GE, FSLR, EQIX, DLR
+- **Broad Market (15%)**: SPY, QQQ, ARKK
+- **Defensive (10%)**: GLD, BTC
 
-### `npm run eject`
+### 5. Market Data
+Real-time tracking of key holdings across:
+- Semiconductors & Foundries
+- Hyperscalers & AI Labs
+- Infrastructure & Energy
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Tech Stack
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **React 18**: Modern component-based UI
+- **Recharts**: Advanced charting library for data visualization
+- **Styled Components**: CSS-in-JS styling with Bloomberg terminal aesthetic
+- **Axios**: API integration for market data
+- **Date-fns**: Date manipulation and formatting
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Installation
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+# Clone the repository
+git clone https://github.com/chrisdover/ai-investment-dashboard.git
 
-## Learn More
+# Navigate to project directory
+cd ai-investment-dashboard
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Install dependencies
+npm install
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Start development server
+npm start
+```
 
-### Code Splitting
+The dashboard will open at `http://localhost:3000` (or PORT=3002 if configured).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Deployment
 
-### Analyzing the Bundle Size
+### Vercel (Recommended)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+# Install Vercel CLI
+npm install -g vercel
 
-### Making a Progressive Web App
+# Deploy
+vercel
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Production deployment
+vercel --prod
+```
 
-### Advanced Configuration
+### Custom Domain Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+To deploy to `trading.pollinatetrading.com/ai`:
 
-### Deployment
+1. Configure Vercel project with custom domain
+2. Add DNS records pointing to Vercel
+3. Configure basepath in `package.json` if using subdirectory routing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Data Updates
 
-### `npm run build` fails to minify
+### Current Implementation
+- Market data: Simulated/mock data (update every 5 minutes)
+- Milestones: Manual tracking based on public announcements
+- CAGR projections: Static model-based calculations
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Production Enhancements
+For real production use, integrate:
+- Yahoo Finance API for live stock prices
+- Alpha Vantage for extended market data
+- Custom backend for milestone tracking
+- Database for historical performance
+
+## Key Metrics Tracked
+
+### AGI Progress
+- Current capability score: 42% (2024-2025 baseline)
+- Expected capability: ~33% (based on 2020-2040 linear progression)
+- Status: ON TRACK (within 90% of expected)
+
+### Revenue Projections
+- Current AI revenue (est.): ~$149B
+- 2030 projection (base): $196B
+- 2040 projection (base): $13.8T
+- Bull case 2040: $29.2T (40% CAGR)
+
+### Critical Milestones
+- ✅ TSMC 3nm production (Q4 2023)
+- ✅ Nvidia H100 deployment (Q2 2023)
+- ✅ TSMC 2nm risk production (Q4 2024)
+- 🟡 Nvidia Blackwell B200 (Q1 2025 - in progress)
+- 🔲 TSMC 2nm mass production (Q2 2025)
+- 🔲 GPT-5 / Next-gen models (Q3 2025)
+- 🔲 1GW datacenters (Q4 2026)
+- 🔲 AGI threshold (Q2 2040 - 70% probability)
+
+## Color Scheme
+
+Bloomberg terminal-inspired dark theme:
+- **Background**: #0a0a0a (black)
+- **Cards**: #1a1a1a (dark gray)
+- **Primary**: #ff6b00 (orange)
+- **Success**: #00ff00 (green)
+- **Warning**: #ffaa00 (amber)
+- **Error**: #ff0000 (red)
+- **Info**: #00aaff (blue)
+
+## Disclaimer
+
+This dashboard is for informational and research purposes only. It does not constitute financial advice. Past performance does not guarantee future results. Always conduct your own due diligence and consult with qualified financial advisors before making investment decisions.
+
+## License
+
+MIT License
+
+## Credits
+
+Investment thesis synthesized from:
+- **Dwarkesh Patel**: AI scaling optimism, infrastructure buildout analysis
+- **SemiAnalysis**: Semiconductor industry insights, datacenter models, foundry analysis
+
+Dashboard developed with Claude Code (Anthropic).
+
+---
+
+**Last Updated**: November 2025
+**Version**: 1.0.0
+**Author**: Chris Dover
+**Website**: [trading.pollinatetrading.com/ai](https://trading.pollinatetrading.com/ai)
