@@ -19,9 +19,8 @@ export const PORTFOLIO_ALLOCATION = {
 export const START_DATE = '2023-01-01';
 
 // Determine API base URL based on environment
-const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://ai.trade.pollinatetrading.com'
-  : 'http://localhost:3000';
+// Use relative URLs so it works on any domain (Vercel deployment or custom domain)
+const API_BASE_URL = typeof window !== 'undefined' ? window.location.origin : '';
 
 /**
  * Get current quote for a symbol
