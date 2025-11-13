@@ -5,6 +5,10 @@ import CAGRTimeline from './components/CAGRTimeline';
 import KeyMilestones from './components/KeyMilestones';
 import PortfolioAllocation from './components/PortfolioAllocation';
 import MarketData from './components/MarketData';
+import ThesisValidation from './components/ThesisValidation';
+import AlertsPanel from './components/AlertsPanel';
+import TradingSignals from './components/TradingSignals';
+import PortfolioPerformance from './components/PortfolioPerformance';
 
 const DashboardContainer = styled.div`
   background: #0a0a0a;
@@ -68,10 +72,28 @@ function App() {
     <DashboardContainer>
       <Header>
         <Title>AI INVESTMENT DASHBOARD</Title>
-        <Subtitle>Tracking the Path to AGI by 2040 | Semiconductor Supercycle Analysis</Subtitle>
+        <Subtitle>Actionable Investment Intelligence | Thesis Validation | Alert System | Performance Tracking</Subtitle>
       </Header>
 
       <GridContainer>
+        {/* Phase 1: Actionable Intelligence */}
+        <FullWidthSection>
+          <AlertsPanel />
+        </FullWidthSection>
+
+        <FullWidthSection>
+          <ThesisValidation />
+        </FullWidthSection>
+
+        <FullWidthSection>
+          <TradingSignals />
+        </FullWidthSection>
+
+        <FullWidthSection>
+          <PortfolioPerformance />
+        </FullWidthSection>
+
+        {/* Core Tracking */}
         <FullWidthSection>
           <AGIProgressTracker />
         </FullWidthSection>
