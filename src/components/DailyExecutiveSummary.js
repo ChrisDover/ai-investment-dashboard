@@ -1,5 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import {
+  calculatePortfolioPerformance,
+  calculateSharpeRatio,
+  calculateMaxDrawdown,
+  getSPYPerformance,
+  START_DATE
+} from '../services/marketDataService';
 
 const Card = styled.div`
   background: #1a1a1a;
@@ -161,12 +168,88 @@ const DailyExecutiveSummary = () => {
   const today = new Date();
   const dateString = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  const stats = [
-    { label: 'Portfolio YTD', value: '+32.1%', change: '+2.1%', positive: true, color: '#00ff00' },
-    { label: 'vs SPY', value: '+10.9%', change: 'Alpha', positive: true, color: '#ff6b00' },
-    { label: 'Sharpe Ratio', value: '1.85', change: 'Excellent', positive: true, color: '#00aaff' },
-    { label: 'Max Drawdown', value: '-5.2%', change: 'Controlled', positive: true, color: '#ffaa00' }
-  ];
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState([
+    { label: 'Portfolio YTD', value: '0%', change: '0%', positive: true, color: '#00ff00' },
+    { label: 'vs SPY', value: '0%', change: 'Alpha', positive: true, color: '#ff6b00' },
+    { label: 'Sharpe Ratio', value: '0', change: 'Loading', positive: true, color: '#00aaff' },
+    { label: 'Max Drawdown', value: '0%', change: 'Loading', positive: true, color: '#ffaa00' }
+  ]);
+
+  useEffect(() => {
+    const fetchPerformanceStats = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch portfolio performance time series
+        const portfolioTimeSeries = await calculatePortfolioPerformance(START_DATE);
+
+        if (portfolioTimeSeries.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        // Calculate daily returns for Sharpe ratio
+        const dailyReturns = [];
+        for (let i = 1; i < portfolioTimeSeries.length; i++) {
+          const dailyReturn = (portfolioTimeSeries[i].value - portfolioTimeSeries[i - 1].value) / portfolioTimeSeries[i - 1].value;
+          dailyReturns.push(dailyReturn);
+        }
+
+        // Calculate metrics
+        const sharpe = calculateSharpeRatio(dailyReturns);
+        const maxDD = calculateMaxDrawdown(portfolioTimeSeries);
+        const spyPerf = await getSPYPerformance(START_DATE);
+        const latestReturn = portfolioTimeSeries[portfolioTimeSeries.length - 1].return;
+        const expectedReturn = 30.0;
+        const delta = latestReturn - expectedReturn;
+        const alpha = latestReturn - spyPerf;
+
+        // Update stats
+        setStats([
+          {
+            label: 'Portfolio YTD',
+            value: `${latestReturn >= 0 ? '+' : ''}${latestReturn.toFixed(1)}%`,
+            change: `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%`,
+            positive: delta >= 0,
+            color: '#00ff00'
+          },
+          {
+            label: 'vs SPY',
+            value: `${alpha >= 0 ? '+' : ''}${alpha.toFixed(1)}%`,
+            change: 'Alpha',
+            positive: alpha >= 0,
+            color: '#ff6b00'
+          },
+          {
+            label: 'Sharpe Ratio',
+            value: sharpe.toFixed(2),
+            change: sharpe >= 1.5 ? 'Excellent' : sharpe >= 1.0 ? 'Good' : 'Fair',
+            positive: true,
+            color: '#00aaff'
+          },
+          {
+            label: 'Max Drawdown',
+            value: `${maxDD.toFixed(1)}%`,
+            change: maxDD > -10 ? 'Controlled' : 'High',
+            positive: maxDD > -10,
+            color: '#ffaa00'
+          }
+        ]);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching performance stats:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchPerformanceStats();
+
+    // Refresh every 15 minutes
+    const interval = setInterval(fetchPerformanceStats, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const keyEvents = [
     {

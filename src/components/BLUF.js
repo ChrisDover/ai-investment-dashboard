@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import {
+  calculatePortfolioPerformance,
+  START_DATE
+} from '../services/marketDataService';
 
 const BLUFContainer = styled.div`
   background: linear-gradient(135deg, #ff6b00 0%, #ff8c33 100%);
@@ -140,6 +144,33 @@ const Timestamp = styled.div`
 const BLUF = () => {
   const currentDate = new Date();
   const marketStatus = 'bullish'; // Could be 'bullish', 'neutral', 'bearish'
+  const [portfolioReturn, setPortfolioReturn] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPerformance = async () => {
+      try {
+        const portfolioTimeSeries = await calculatePortfolioPerformance(START_DATE);
+        if (portfolioTimeSeries.length > 0) {
+          const latestReturn = portfolioTimeSeries[portfolioTimeSeries.length - 1].return;
+          setPortfolioReturn(latestReturn);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching performance for BLUF:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchPerformance();
+
+    // Refresh every 15 minutes
+    const interval = setInterval(fetchPerformance, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const expectedReturn = 30.0; // Expected CAGR
+  const delta = portfolioReturn - expectedReturn;
 
   const takeaways = [
     {
@@ -186,7 +217,7 @@ const BLUF = () => {
       <MarketStatus>
         <StatusIndicator status={marketStatus} />
         <StatusText>
-          Market Status: {marketStatus.toUpperCase()} | Thesis ON TRACK | Portfolio: +32.1% YTD (+2.1% vs Expected)
+          Market Status: {marketStatus.toUpperCase()} | Thesis ON TRACK | Portfolio: {loading ? 'Loading...' : `${portfolioReturn >= 0 ? '+' : ''}${portfolioReturn.toFixed(1)}% YTD (${delta >= 0 ? '+' : ''}${delta.toFixed(1)}% vs Expected)`}
         </StatusText>
       </MarketStatus>
 

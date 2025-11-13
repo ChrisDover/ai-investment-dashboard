@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import {
+  calculatePortfolioPerformance,
+  calculateSharpeRatio,
+  calculateMaxDrawdown,
+  calculateAttribution,
+  getSPYPerformance,
+  START_DATE
+} from '../services/marketDataService';
 
 const Card = styled.div`
   background: #1a1a1a;
@@ -98,59 +106,125 @@ const TableCell = styled.div`
 `;
 
 const PortfolioPerformance = () => {
-  // Historical performance data (since inception - Jan 2024)
-  const performanceData = [
-    { month: 'Jan 24', actual: 0, expected: 0, spy: 0 },
-    { month: 'Feb 24', actual: 5.2, expected: 2.5, spy: 3.1 },
-    { month: 'Mar 24', actual: 8.7, expected: 5.0, spy: 5.8 },
-    { month: 'Apr 24', actual: 6.3, expected: 7.5, spy: 4.2 },
-    { month: 'May 24', actual: 11.2, expected: 10.0, spy: 7.5 },
-    { month: 'Jun 24', actual: 15.8, expected: 12.5, spy: 10.2 },
-    { month: 'Jul 24', actual: 18.9, expected: 15.0, spy: 12.8 },
-    { month: 'Aug 24', actual: 16.2, expected: 17.5, spy: 11.5 },
-    { month: 'Sep 24', actual: 21.5, expected: 20.0, spy: 14.3 },
-    { month: 'Oct 24', actual: 24.8, expected: 22.5, spy: 16.1 },
-    { month: 'Nov 24', actual: 28.3, expected: 25.0, spy: 18.5 },
-    { month: 'Dec 24', actual: 32.1, expected: 30.0, spy: 21.2 }
-  ];
+  const [loading, setLoading] = useState(true);
+  const [performanceData, setPerformanceData] = useState([]);
+  const [attributionData, setAttributionData] = useState([]);
+  const [riskMetrics, setRiskMetrics] = useState([]);
+  const [currentReturn, setCurrentReturn] = useState(0);
+  const [spyReturn, setSpyReturn] = useState(0);
+  const [sharpeRatio, setSharpeRatio] = useState(0);
+  const [maxDrawdown, setMaxDrawdown] = useState(0);
 
-  // Attribution by position
-  const attributionData = [
-    { holding: 'NVDA', allocation: '25%', ytdReturn: '+48.5%', contribution: '+12.1%', status: 'outperform' },
-    { holding: 'TSM', allocation: '8%', ytdReturn: '+42.3%', contribution: '+3.4%', status: 'outperform' },
-    { holding: 'MSFT', allocation: '10%', ytdReturn: '+38.7%', contribution: '+3.9%', status: 'outperform' },
-    { holding: 'GOOGL', allocation: '7%', ytdReturn: '+35.2%', contribution: '+2.5%', status: 'outperform' },
-    { holding: 'AMD', allocation: '5%', ytdReturn: '+28.9%', contribution: '+1.4%', status: 'inline' },
-    { holding: 'ASML', allocation: '5%', ytdReturn: '+31.2%', contribution: '+1.6%', status: 'inline' },
-    { holding: 'VRT', allocation: '6%', ytdReturn: '+52.1%', contribution: '+3.1%', status: 'outperform' },
-    { holding: 'ETN', allocation: '4%', ytdReturn: '+44.8%', contribution: '+1.8%', status: 'outperform' },
-    { holding: 'EQT', allocation: '5%', ytdReturn: '+12.3%', contribution: '+0.6%', status: 'underperform' },
-    { holding: 'SPY', allocation: '10%', ytdReturn: '+21.2%', contribution: '+2.1%', status: 'inline' },
-    { holding: 'Cash/Other', allocation: '15%', ytdReturn: '+5.2%', contribution: '+0.8%', status: 'inline' }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  // Risk metrics
-  const riskMetrics = [
-    { month: 'Jan', drawdown: 0 },
-    { month: 'Feb', drawdown: -2.1 },
-    { month: 'Mar', drawdown: 0 },
-    { month: 'Apr', drawdown: -3.8 },
-    { month: 'May', drawdown: 0 },
-    { month: 'Jun', drawdown: 0 },
-    { month: 'Jul', drawdown: 0 },
-    { month: 'Aug', drawdown: -5.2 },
-    { month: 'Sep', drawdown: 0 },
-    { month: 'Oct', drawdown: 0 },
-    { month: 'Nov', drawdown: 0 },
-    { month: 'Dec', drawdown: 0 }
-  ];
+        // Fetch portfolio performance time series
+        const portfolioTimeSeries = await calculatePortfolioPerformance(START_DATE);
 
-  const currentReturn = 32.1; // YTD
-  const expectedReturn = 30.0;
-  const spyReturn = 21.2;
-  const sharpeRatio = 1.85;
-  const maxDrawdown = -5.2;
+        if (portfolioTimeSeries.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        // Calculate daily returns for Sharpe ratio
+        const dailyReturns = [];
+        for (let i = 1; i < portfolioTimeSeries.length; i++) {
+          const dailyReturn = (portfolioTimeSeries[i].value - portfolioTimeSeries[i - 1].value) / portfolioTimeSeries[i - 1].value;
+          dailyReturns.push(dailyReturn);
+        }
+
+        // Calculate metrics
+        const sharpe = calculateSharpeRatio(dailyReturns);
+        const maxDD = calculateMaxDrawdown(portfolioTimeSeries);
+        const spyPerf = await getSPYPerformance(START_DATE);
+        const attribution = await calculateAttribution(START_DATE);
+
+        // Get current return (last data point)
+        const latestReturn = portfolioTimeSeries[portfolioTimeSeries.length - 1].return;
+
+        // Format performance data by month for chart
+        const monthlyData = {};
+        portfolioTimeSeries.forEach(point => {
+          const monthKey = point.date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+          if (!monthlyData[monthKey]) {
+            monthlyData[monthKey] = point;
+          }
+        });
+
+        const formattedPerformanceData = Object.keys(monthlyData).map(monthKey => {
+          const point = monthlyData[monthKey];
+          const expectedReturn = ((point.date - new Date(START_DATE)) / (1000 * 60 * 60 * 24 * 365)) * 30; // 30% CAGR expected
+          const spyReturnAtDate = (point.return / latestReturn) * spyPerf; // Proportional SPY return
+
+          return {
+            month: monthKey,
+            actual: point.return,
+            expected: expectedReturn,
+            spy: spyReturnAtDate
+          };
+        });
+
+        // Calculate drawdowns by month
+        const drawdownsByMonth = {};
+        let runningPeak = portfolioTimeSeries[0].value;
+
+        portfolioTimeSeries.forEach(point => {
+          const monthKey = point.date.toLocaleDateString('en-US', { month: 'short' });
+
+          if (point.value > runningPeak) {
+            runningPeak = point.value;
+          }
+
+          const currentDrawdown = ((point.value - runningPeak) / runningPeak) * 100;
+
+          if (!drawdownsByMonth[monthKey] || currentDrawdown < drawdownsByMonth[monthKey]) {
+            drawdownsByMonth[monthKey] = currentDrawdown;
+          }
+        });
+
+        const formattedRiskMetrics = Object.keys(drawdownsByMonth).map(month => ({
+          month,
+          drawdown: drawdownsByMonth[month]
+        }));
+
+        // Set all state
+        setPerformanceData(formattedPerformanceData);
+        setAttributionData(attribution);
+        setRiskMetrics(formattedRiskMetrics);
+        setCurrentReturn(latestReturn);
+        setSpyReturn(spyPerf);
+        setSharpeRatio(sharpe);
+        setMaxDrawdown(maxDD);
+        setLoading(false);
+
+      } catch (error) {
+        console.error('Error fetching portfolio performance:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    // Refresh every 5 minutes
+    const interval = setInterval(fetchData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const expectedReturn = 30.0; // Expected CAGR
   const alpha = currentReturn - spyReturn;
+
+  if (loading) {
+    return (
+      <Card>
+        <CardTitle>💼 Portfolio Performance: Thesis vs. Reality</CardTitle>
+        <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
+          Loading real portfolio performance data...
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card>

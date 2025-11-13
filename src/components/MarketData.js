@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getAllMarketData } from '../services/marketDataService';
 
 const Card = styled.div`
   background: #1a1a1a;
@@ -76,117 +77,144 @@ const CategoryHeader = styled.h3`
 `;
 
 const MarketData = () => {
+  const [loading, setLoading] = useState(true);
   const [marketData, setMarketData] = useState({
-    semiconductors: [
-      { ticker: 'NVDA', name: 'Nvidia', price: 0, change: 0 },
-      { ticker: 'TSM', name: 'TSMC', price: 0, change: 0 },
-      { ticker: 'AMD', name: 'AMD', price: 0, change: 0 },
-      { ticker: 'ASML', name: 'ASML', price: 0, change: 0 },
-      { ticker: 'MU', name: 'Micron', price: 0, change: 0 },
-    ],
-    hyperscalers: [
-      { ticker: 'MSFT', name: 'Microsoft', price: 0, change: 0 },
-      { ticker: 'GOOGL', name: 'Google', price: 0, change: 0 },
-      { ticker: 'AMZN', name: 'Amazon', price: 0, change: 0 },
-      { ticker: 'META', name: 'Meta', price: 0, change: 0 },
-    ],
-    infrastructure: [
-      { ticker: 'EQT', name: 'EQT Corp', price: 0, change: 0 },
-      { ticker: 'VRT', name: 'Vertiv', price: 0, change: 0 },
-      { ticker: 'ETN', name: 'Eaton', price: 0, change: 0 },
-      { ticker: 'GE', name: 'GE Vernova', price: 0, change: 0 },
-      { ticker: 'EQIX', name: 'Equinix', price: 0, change: 0 },
-    ]
+    semiconductors: [],
+    hyperscalers: [],
+    infrastructure: [],
+    defensive: []
   });
 
-  // Simulate market data (in production, this would fetch from Yahoo Finance API)
-  useEffect(() => {
-    const simulateMarketData = () => {
-      // Mock data - replace with real API calls in production
-      const mockPrices = {
-        'NVDA': { price: 142.50, change: 2.3 },
-        'TSM': { price: 187.25, change: 1.8 },
-        'AMD': { price: 163.40, change: -0.5 },
-        'ASML': { price: 897.60, change: 1.2 },
-        'MU': { price: 98.30, change: 3.1 },
-        'MSFT': { price: 425.80, change: 0.9 },
-        'GOOGL': { price: 168.20, change: 1.5 },
-        'AMZN': { price: 195.75, change: 2.1 },
-        'META': { price: 582.30, change: 1.7 },
-        'EQT': { price: 38.90, change: -1.2 },
-        'VRT': { price: 105.40, change: 2.8 },
-        'ETN': { price: 315.20, change: 1.1 },
-        'GE': { price: 172.50, change: 0.7 },
-        'EQIX': { price: 845.30, change: -0.3 },
-      };
+  const stockNames = {
+    'NVDA': 'Nvidia',
+    'TSM': 'TSMC',
+    'AMD': 'AMD',
+    'ASML': 'ASML',
+    'MU': 'Micron',
+    'MSFT': 'Microsoft',
+    'GOOGL': 'Google',
+    'VRT': 'Vertiv',
+    'ETN': 'Eaton',
+    'EQT': 'EQT Corp',
+    'SPY': 'S&P 500',
+    'GLD': 'Gold',
+    'BTC-USD': 'Bitcoin'
+  };
 
-      setMarketData(prev => ({
-        semiconductors: prev.semiconductors.map(stock => ({
-          ...stock,
-          price: mockPrices[stock.ticker]?.price || 0,
-          change: mockPrices[stock.ticker]?.change || 0
-        })),
-        hyperscalers: prev.hyperscalers.map(stock => ({
-          ...stock,
-          price: mockPrices[stock.ticker]?.price || 0,
-          change: mockPrices[stock.ticker]?.change || 0
-        })),
-        infrastructure: prev.infrastructure.map(stock => ({
-          ...stock,
-          price: mockPrices[stock.ticker]?.price || 0,
-          change: mockPrices[stock.ticker]?.change || 0
-        }))
-      }));
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      try {
+        setLoading(true);
+        const data = await getAllMarketData();
+
+        // Format the data with friendly names
+        const formatQuotes = (quotes) => quotes.map(q => ({
+          ticker: q.symbol,
+          name: stockNames[q.symbol] || q.symbol,
+          price: q.price || 0,
+          change: q.change || 0
+        }));
+
+        setMarketData({
+          semiconductors: formatQuotes(data.semiconductors),
+          hyperscalers: formatQuotes(data.hyperscalers),
+          infrastructure: formatQuotes(data.infrastructure),
+          defensive: formatQuotes(data.defensive)
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching market data:', error);
+        setLoading(false);
+      }
     };
 
-    simulateMarketData();
+    fetchMarketData();
 
     // Update every 5 minutes
-    const interval = setInterval(simulateMarketData, 5 * 60 * 1000);
+    const interval = setInterval(fetchMarketData, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, []);
+
+  if (loading) {
+    return (
+      <Card>
+        <CardTitle>Market Data: Key Holdings</CardTitle>
+        <div style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
+          Loading real-time market data...
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card>
       <CardTitle>Market Data: Key Holdings</CardTitle>
 
       <StockGrid>
-        <CategoryHeader>Semiconductors & Foundries</CategoryHeader>
-        {marketData.semiconductors.map(stock => (
-          <StockCard key={stock.ticker} change={stock.change}>
-            <StockTicker>{stock.ticker}</StockTicker>
-            <StockName>{stock.name}</StockName>
-            <StockPrice>${stock.price.toFixed(2)}</StockPrice>
-            <StockChange change={stock.change}>
-              {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
-            </StockChange>
-          </StockCard>
-        ))}
+        {marketData.semiconductors.length > 0 && (
+          <>
+            <CategoryHeader>Semiconductors & Foundries</CategoryHeader>
+            {marketData.semiconductors.map(stock => (
+              <StockCard key={stock.ticker} change={stock.change}>
+                <StockTicker>{stock.ticker}</StockTicker>
+                <StockName>{stock.name}</StockName>
+                <StockPrice>${stock.price.toFixed(2)}</StockPrice>
+                <StockChange change={stock.change}>
+                  {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
+                </StockChange>
+              </StockCard>
+            ))}
+          </>
+        )}
 
-        <CategoryHeader>Hyperscalers & AI Labs</CategoryHeader>
-        {marketData.hyperscalers.map(stock => (
-          <StockCard key={stock.ticker} change={stock.change}>
-            <StockTicker>{stock.ticker}</StockTicker>
-            <StockName>{stock.name}</StockName>
-            <StockPrice>${stock.price.toFixed(2)}</StockPrice>
-            <StockChange change={stock.change}>
-              {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
-            </StockChange>
-          </StockCard>
-        ))}
+        {marketData.hyperscalers.length > 0 && (
+          <>
+            <CategoryHeader>Hyperscalers & AI Labs</CategoryHeader>
+            {marketData.hyperscalers.map(stock => (
+              <StockCard key={stock.ticker} change={stock.change}>
+                <StockTicker>{stock.ticker}</StockTicker>
+                <StockName>{stock.name}</StockName>
+                <StockPrice>${stock.price.toFixed(2)}</StockPrice>
+                <StockChange change={stock.change}>
+                  {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
+                </StockChange>
+              </StockCard>
+            ))}
+          </>
+        )}
 
-        <CategoryHeader>Infrastructure & Energy</CategoryHeader>
-        {marketData.infrastructure.map(stock => (
-          <StockCard key={stock.ticker} change={stock.change}>
-            <StockTicker>{stock.ticker}</StockTicker>
-            <StockName>{stock.name}</StockName>
-            <StockPrice>${stock.price.toFixed(2)}</StockPrice>
-            <StockChange change={stock.change}>
-              {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
-            </StockChange>
-          </StockCard>
-        ))}
+        {marketData.infrastructure.length > 0 && (
+          <>
+            <CategoryHeader>Infrastructure & Energy</CategoryHeader>
+            {marketData.infrastructure.map(stock => (
+              <StockCard key={stock.ticker} change={stock.change}>
+                <StockTicker>{stock.ticker}</StockTicker>
+                <StockName>{stock.name}</StockName>
+                <StockPrice>${stock.price.toFixed(2)}</StockPrice>
+                <StockChange change={stock.change}>
+                  {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
+                </StockChange>
+              </StockCard>
+            ))}
+          </>
+        )}
+
+        {marketData.defensive.length > 0 && (
+          <>
+            <CategoryHeader>Defensive & Alternative Assets</CategoryHeader>
+            {marketData.defensive.map(stock => (
+              <StockCard key={stock.ticker} change={stock.change}>
+                <StockTicker>{stock.ticker}</StockTicker>
+                <StockName>{stock.name}</StockName>
+                <StockPrice>${stock.price.toFixed(2)}</StockPrice>
+                <StockChange change={stock.change}>
+                  {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
+                </StockChange>
+              </StockCard>
+            ))}
+          </>
+        )}
       </StockGrid>
     </Card>
   );
