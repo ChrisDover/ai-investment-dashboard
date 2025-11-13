@@ -1,4 +1,4 @@
-const yahooFinance = require('yahoo-finance2').default;
+const yahooFinance = require('yahoo-finance2');
 
 export default async function handler(req, res) {
   // Enable CORS
