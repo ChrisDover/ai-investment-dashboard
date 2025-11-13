@@ -1,4 +1,6 @@
-const yahooFinance = require('yahoo-finance2');
+const fetch = require('node-fetch');
+
+const ALPHA_VANTAGE_KEY = process.env.ALPHA_VANTAGE_API_KEY || 'ZAN2YWHAD299PEE8';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -22,14 +24,25 @@ export default async function handler(req, res) {
     const quotes = await Promise.all(
       symbolArray.map(async (symbol) => {
         try {
-          const quote = await yahooFinance.quote(symbol.trim());
+          const trimmedSymbol = symbol.trim();
+          const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${trimmedSymbol}&apikey=${ALPHA_VANTAGE_KEY}`;
+
+          const response = await fetch(url);
+          const data = await response.json();
+
+          if (!data['Global Quote'] || Object.keys(data['Global Quote']).length === 0) {
+            console.error(`No data for ${trimmedSymbol}`);
+            return null;
+          }
+
+          const quote = data['Global Quote'];
+
           return {
-            symbol: quote.symbol,
-            price: quote.regularMarketPrice,
-            change: quote.regularMarketChangePercent,
-            volume: quote.regularMarketVolume,
-            marketCap: quote.marketCap,
-            previousClose: quote.regularMarketPreviousClose
+            symbol: trimmedSymbol,
+            price: parseFloat(quote['05. price']),
+            change: parseFloat(quote['10. change percent'].replace('%', '')),
+            volume: parseInt(quote['06. volume']),
+            previousClose: parseFloat(quote['08. previous close'])
           };
         } catch (error) {
           console.error(`Error fetching quote for ${symbol}:`, error);
