@@ -2,7 +2,7 @@
   "name": "ai-investment-dashboard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://trade.pollinatetrading.com/ai",
+  "homepage": "https://ai.trade.pollinatetrading.com",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
