@@ -21,6 +21,10 @@ const DashboardContainer = styled.div`
   min-height: 100vh;
   font-family: 'Monaco', 'Courier New', monospace;
   padding: 20px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const Header = styled.header`
@@ -28,6 +32,11 @@ const Header = styled.header`
   padding: 30px 0;
   border-bottom: 2px solid #ff6b00;
   margin-bottom: 30px;
+
+  @media (max-width: 768px) {
+    padding: 20px 0;
+    margin-bottom: 20px;
+  }
 `;
 
 const Title = styled.h1`
@@ -36,6 +45,15 @@ const Title = styled.h1`
   margin: 0 0 10px 0;
   font-weight: 700;
   letter-spacing: 2px;
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const Subtitle = styled.p`
@@ -43,17 +61,31 @@ const Subtitle = styled.p`
   color: #888;
   margin: 0;
   font-style: italic;
+
+  @media (max-width: 768px) {
+    font-size: 0.85rem;
+    padding: 0 10px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+  }
 `;
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   max-width: 1800px;
   margin: 0 auto;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 10px;
   }
 `;
 

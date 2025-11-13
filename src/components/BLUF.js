@@ -12,6 +12,16 @@ const BLUFContainer = styled.div`
   padding: 30px;
   margin-bottom: 30px;
   box-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
 `;
 
 const BLUFTitle = styled.h2`
@@ -21,6 +31,15 @@ const BLUFTitle = styled.h2`
   text-transform: uppercase;
   letter-spacing: 2px;
   font-weight: 700;
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const MarketStatus = styled.div`
@@ -30,6 +49,17 @@ const MarketStatus = styled.div`
   margin-bottom: 25px;
   padding-bottom: 20px;
   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const StatusIndicator = styled.div`
@@ -39,10 +69,16 @@ const StatusIndicator = styled.div`
   background: ${props => props.status === 'bullish' ? '#00ff00' :
                          props.status === 'neutral' ? '#ffaa00' : '#ff0000'};
   animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+  }
+
+  @media (max-width: 480px) {
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -50,13 +86,31 @@ const StatusText = styled.div`
   color: #000;
   font-size: 1.2rem;
   font-weight: 700;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const KeyTakeawaysGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 15px;
   margin-bottom: 25px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 `;
 
 const TakeawayCard = styled.div`

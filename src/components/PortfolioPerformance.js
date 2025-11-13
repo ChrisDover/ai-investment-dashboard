@@ -16,6 +16,15 @@ const Card = styled.div`
   border-radius: 8px;
   padding: 25px;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const CardTitle = styled.h2`
@@ -24,6 +33,15 @@ const CardTitle = styled.h2`
   margin: 0 0 20px 0;
   text-transform: uppercase;
   letter-spacing: 1.5px;
+
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const PerformanceSummary = styled.div`
@@ -31,6 +49,16 @@ const PerformanceSummary = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
   margin-bottom: 30px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
 `;
 
 const SummaryCard = styled.div`
@@ -38,6 +66,14 @@ const SummaryCard = styled.div`
   padding: 20px;
   border-radius: 6px;
   border-left: 4px solid ${props => props.color || '#ff6b00'};
+
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const SummaryLabel = styled.div`
@@ -45,6 +81,14 @@ const SummaryLabel = styled.div`
   color: #888;
   margin-bottom: 8px;
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.7rem;
+  }
 `;
 
 const SummaryValue = styled.div`
@@ -52,11 +96,27 @@ const SummaryValue = styled.div`
   font-weight: 700;
   color: ${props => props.color || '#fff'};
   margin-bottom: 5px;
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.3rem;
+  }
 `;
 
 const SummarySubtext = styled.div`
   font-size: 0.75rem;
   color: #666;
+
+  @media (max-width: 768px) {
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.65rem;
+  }
 `;
 
 const AttributionSection = styled.div`
@@ -72,8 +132,19 @@ const SectionTitle = styled.h3`
 const AttributionTable = styled.div`
   background: #0a0a0a;
   border-radius: 6px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   margin-bottom: 30px;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 768px) {
+    margin: 0 -20px 30px -20px;
+    border-radius: 0;
+  }
+
+  @media (max-width: 480px) {
+    margin: 0 -15px 20px -15px;
+  }
 `;
 
 const TableRow = styled.div`
@@ -82,6 +153,7 @@ const TableRow = styled.div`
   padding: 15px 20px;
   border-bottom: 1px solid #333;
   transition: background 0.2s;
+  min-width: 600px;
 
   &:hover {
     background: #1a1a1a;
@@ -98,11 +170,29 @@ const TableRow = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  @media (max-width: 768px) {
+    padding: 12px 15px;
+    min-width: 550px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px 12px;
+    min-width: 500px;
+  }
 `;
 
 const TableCell = styled.div`
   color: ${props => props.color || '#ddd'};
   font-size: 0.95rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const PortfolioPerformance = () => {
