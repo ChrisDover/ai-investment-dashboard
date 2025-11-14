@@ -14,6 +14,7 @@ import ScenarioTesting from './components/ScenarioTesting';
 import CompanyDeepDives from './components/CompanyDeepDives';
 import BLUF from './components/BLUF';
 import DailyExecutiveSummary from './components/DailyExecutiveSummary';
+import ResearchHub from './components/ResearchHub';
 
 const DashboardContainer = styled.div`
   background: #0a0a0a;
@@ -167,6 +168,10 @@ function App() {
         </FullWidthSection>
 
         {/* PRIORITY 4: Deep Research & Intelligence */}
+        <FullWidthSection>
+          <ResearchHub />
+        </FullWidthSection>
+
         <FullWidthSection>
           <NewsIntegration />
         </FullWidthSection>
