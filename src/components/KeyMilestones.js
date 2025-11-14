@@ -144,172 +144,172 @@ const KeyMilestones = () => {
   const milestones = [
     {
       id: 1,
-      title: 'GPT-4 Launch',
-      date: 'Q1 2023',
+      title: 'TSMC 5nm Mass Production',
+      date: 'Q2 2020',
       status: 'completed',
-      category: 'models',
-      description: 'OpenAI releases GPT-4, demonstrating significant improvements in reasoning and multimodal capabilities.',
-      tags: ['Foundation Model', 'OpenAI'],
-      impact: 'high'
-    },
-    {
-      id: 2,
-      title: 'TSMC 3nm Production Ramp',
-      date: 'Q4 2023',
-      status: 'completed',
-      category: 'chips',
-      description: 'TSMC begins mass production of 3nm chips (N3), achieving 2x transistor density improvements.',
+      category: 'foundry',
+      description: 'TSMC achieves 2x transistor density from 7nm to 5nm, establishing leadership in advanced nodes.',
       tags: ['TSMC', 'Process Node'],
       impact: 'critical'
     },
     {
-      id: 3,
-      title: 'Nvidia H100 Datacenter Deployment',
-      date: 'Q2 2023',
+      id: 2,
+      title: 'Nvidia A100 Launch',
+      date: 'Q2 2020',
       status: 'completed',
-      category: 'infrastructure',
-      description: 'Major hyperscalers deploy H100 GPUs at scale, enabling 4-9x performance improvements over A100.',
-      tags: ['Nvidia', 'Hardware', 'Datacenter'],
+      category: 'accelerators',
+      description: 'Ampere architecture with HBM2e marks beginning of AI datacenter GPU dominance.',
+      tags: ['Nvidia', 'AI Hardware'],
+      impact: 'critical'
+    },
+    {
+      id: 3,
+      title: 'TSMC 3nm Production Ramp',
+      date: 'Q4 2023',
+      status: 'completed',
+      category: 'foundry',
+      description: 'TSMC begins mass production of 3nm chips (N3), achieving 2x transistor density improvements over 5nm.',
+      tags: ['TSMC', 'Process Node'],
       impact: 'critical'
     },
     {
       id: 4,
-      title: 'Claude 3 Opus Release',
-      date: 'Q1 2024',
+      title: 'Nvidia H100 Datacenter Deployment',
+      date: 'Q2 2023',
       status: 'completed',
-      category: 'models',
-      description: 'Anthropic launches Claude 3 family, with Opus matching/exceeding GPT-4 on key benchmarks.',
-      tags: ['Foundation Model', 'Anthropic'],
-      impact: 'high'
+      category: 'accelerators',
+      description: 'Hopper H100 with HBM3 delivers 4-9x performance improvements, capturing 85%+ datacenter GPU share.',
+      tags: ['Nvidia', 'Hardware', 'Datacenter'],
+      impact: 'critical'
     },
     {
       id: 5,
-      title: 'Nvidia Blackwell B200 Launch',
-      date: 'Q1 2025',
-      status: 'in-progress',
-      category: 'chips',
-      description: 'Blackwell architecture promises 2.5x performance improvement over Hopper. GB200 systems in production.',
-      tags: ['Nvidia', 'Next-Gen'],
+      title: 'SK Hynix HBM3E Production',
+      date: 'Q3 2023',
+      status: 'completed',
+      category: 'memory',
+      description: 'HBM3E production begins with 3x bandwidth advantage over DDR5, critical for AI inference.',
+      tags: ['Memory', 'SK Hynix', 'HBM'],
       impact: 'critical'
     },
     {
       id: 6,
+      title: 'US CHIPS Act Funding',
+      date: 'Q1 2024',
+      status: 'completed',
+      category: 'geopolitical',
+      description: 'US deploys $52B in subsidies, boosting domestic fab construction (TSMC Arizona, Intel Ohio).',
+      tags: ['Policy', 'US-China', 'Subsidies'],
+      impact: 'high'
+    },
+    {
+      id: 7,
       title: 'TSMC 2nm (N2) Risk Production',
       date: 'Q4 2024',
       status: 'completed',
-      category: 'chips',
+      category: 'foundry',
       description: 'TSMC begins risk production of 2nm GAA process with backside power delivery.',
       tags: ['TSMC', 'Process Node', 'GAA'],
       impact: 'critical'
     },
     {
-      id: 7,
-      title: 'TSMC 2nm Mass Production',
-      date: 'Q2 2025',
-      status: 'upcoming',
-      category: 'chips',
-      description: 'TSMC ramps 2nm to mass production. Expected to power next-gen AI accelerators (Nvidia, AMD, Apple).',
-      tags: ['TSMC', 'Critical Milestone'],
-      impact: 'critical'
-    },
-    {
       id: 8,
-      title: 'GPT-5 / Next-Gen Foundation Models',
-      date: 'Q3 2025',
-      status: 'upcoming',
-      category: 'models',
-      description: 'Expected release of next-generation foundation models with significantly enhanced reasoning and agentic capabilities.',
-      tags: ['Foundation Model', 'OpenAI', 'Scaling'],
+      title: 'Nvidia Blackwell GB200 Launch',
+      date: 'Q1 2025',
+      status: 'in-progress',
+      category: 'accelerators',
+      description: 'Blackwell GB200A with 2.5x performance over Hopper. NVSwitch enables 4,000+ GPU clusters.',
+      tags: ['Nvidia', 'Next-Gen', 'Critical'],
       impact: 'critical'
     },
     {
       id: 9,
+      title: 'TSMC 2nm Mass Production',
+      date: 'Q2 2025',
+      status: 'upcoming',
+      category: 'foundry',
+      description: 'TSMC ramps 2nm to mass production. Expected to power Nvidia, AMD, Apple next-gen chips.',
+      tags: ['TSMC', 'Critical Milestone'],
+      impact: 'critical'
+    },
+    {
+      id: 10,
       title: 'AMD MI350 Launch',
       date: 'Q4 2025',
       status: 'upcoming',
-      category: 'chips',
-      description: 'AMD MI350 on TSMC 3nm expected to challenge Nvidia with improved inference performance.',
+      category: 'accelerators',
+      description: 'AMD MI350 on TSMC 3nm targets 40%+ latency edge over Hopper in inference workloads.',
       tags: ['AMD', 'Competition'],
       impact: 'high'
     },
     {
-      id: 10,
-      title: '1GW Datacenter Deployments',
-      date: 'Q4 2026',
-      status: 'upcoming',
-      category: 'infrastructure',
-      description: 'First gigawatt-scale AI datacenters come online, enabled by natural gas and off-grid solutions.',
-      tags: ['Energy', 'Scale', 'Infrastructure'],
-      impact: 'critical'
-    },
-    {
       id: 11,
-      title: 'HBM4 Mass Production',
-      date: 'Q2 2026',
+      title: 'CoWoS Capacity Expansion',
+      date: 'Q1 2026',
       status: 'upcoming',
-      category: 'chips',
-      description: 'SK Hynix/Micron begin HBM4 production with 2x bandwidth improvements critical for LLM inference.',
-      tags: ['Memory', 'SK Hynix', 'Micron'],
+      category: 'packaging',
+      description: 'TSMC doubles CoWoS advanced packaging capacity, easing supply bottlenecks for AI chips.',
+      tags: ['TSMC', 'Packaging', 'Supply Chain'],
       impact: 'high'
     },
     {
       id: 12,
-      title: 'Hyperscaler AI Revenue >$100B',
-      date: 'Q4 2026',
+      title: 'HBM4 Mass Production',
+      date: 'Q2 2026',
       status: 'upcoming',
-      category: 'economic',
-      description: 'Combined AI revenues from hyperscalers (MSFT, GOOGL, AMZN) exceed $100B annually.',
-      tags: ['Economics', 'Revenue'],
+      category: 'memory',
+      description: 'SK Hynix/Micron begin HBM4 production with 2x bandwidth vs HBM3E for LLM KV cache scaling.',
+      tags: ['Memory', 'SK Hynix', 'Micron'],
       impact: 'critical'
     },
     {
       id: 13,
-      title: 'ARC-AGI 85% Benchmark',
-      date: 'Q2 2027',
+      title: '1GW Datacenter Deployments',
+      date: 'Q4 2026',
       status: 'upcoming',
-      category: 'models',
-      description: 'AI models achieve 85%+ on ARC-AGI benchmark, demonstrating broad generalization capabilities.',
-      tags: ['Benchmark', 'AGI Progress'],
+      category: 'infrastructure',
+      description: 'First gigawatt-scale AI datacenters come online with natural gas and off-grid power solutions.',
+      tags: ['Energy', 'Datacenter', 'Infrastructure'],
       impact: 'critical'
     },
     {
       id: 14,
-      title: 'TSMC 1.4nm (A14) Production',
-      date: 'Q1 2028',
-      status: 'upcoming',
-      category: 'chips',
-      description: 'TSMC advances to A14 node (1.4nm equivalent), continuing Moore\'s Law trajectory.',
-      tags: ['TSMC', 'Process Node'],
-      impact: 'high'
-    },
-    {
-      id: 15,
-      title: 'Global AI CapEx >$2T Annually',
+      title: 'Semiconductor Revenue >$1T',
       date: 'Q4 2029',
       status: 'upcoming',
       category: 'economic',
-      description: 'Annual AI infrastructure CapEx reaches $2T as projected, split 60-70% chips, 30-40% energy/facilities.',
-      tags: ['CapEx', 'Infrastructure'],
+      description: 'Global semiconductor revenues cross $1T milestone driven by AI compute demand.',
+      tags: ['Economics', 'Revenue', 'Industry'],
+      impact: 'critical'
+    },
+    {
+      id: 15,
+      title: 'Global AI CapEx $2T Annually',
+      date: 'Q4 2029',
+      status: 'upcoming',
+      category: 'economic',
+      description: 'Annual AI infrastructure CapEx reaches $2T, with 60-70% allocated to semiconductors.',
+      tags: ['CapEx', 'Infrastructure', 'Chips'],
       impact: 'critical'
     },
     {
       id: 16,
-      title: 'Autonomous AI Researchers',
-      date: 'Q2 2030',
+      title: 'TSMC 1.4nm (A14) Production',
+      date: 'Q1 2028',
       status: 'upcoming',
-      category: 'models',
-      description: 'AI systems capable of autonomous research and development across multiple domains.',
-      tags: ['AGI Milestone', 'Automation'],
-      impact: 'critical'
+      category: 'foundry',
+      description: 'TSMC advances to A14 node (1.4nm equivalent), continuing Moore\'s Law trajectory for AI chips.',
+      tags: ['TSMC', 'Process Node'],
+      impact: 'high'
     },
     {
       id: 17,
-      title: 'AGI Threshold Reached',
-      date: 'Q2 2040',
+      title: 'China Semiconductor Self-Sufficiency',
+      date: 'Q2 2030',
       status: 'upcoming',
-      category: 'models',
-      description: '70% probability target: AI systems achieve human-level general intelligence across all cognitive tasks.',
-      tags: ['AGI', 'Target'],
+      category: 'geopolitical',
+      description: 'Risk scenario: China achieves 30%+ global fab capacity via SMIC 7nm volumes despite EUV restrictions.',
+      tags: ['China', 'SMIC', 'Geopolitical Risk'],
       impact: 'critical'
     }
   ];
@@ -320,23 +320,29 @@ const KeyMilestones = () => {
 
   return (
     <Card>
-      <CardTitle>Key Milestones: Critical Path to AGI</CardTitle>
+      <CardTitle>Key Milestones: Semiconductor Supercycle Roadmap</CardTitle>
 
       <FilterButtons>
         <FilterButton active={filter === 'all'} onClick={() => setFilter('all')}>
           All Milestones
         </FilterButton>
-        <FilterButton active={filter === 'chips'} onClick={() => setFilter('chips')}>
-          Chips & Semiconductors
+        <FilterButton active={filter === 'foundry'} onClick={() => setFilter('foundry')}>
+          Foundry & Process Nodes
         </FilterButton>
-        <FilterButton active={filter === 'models'} onClick={() => setFilter('models')}>
-          AI Models
+        <FilterButton active={filter === 'accelerators'} onClick={() => setFilter('accelerators')}>
+          AI Accelerators
+        </FilterButton>
+        <FilterButton active={filter === 'memory'} onClick={() => setFilter('memory')}>
+          Memory & HBM
         </FilterButton>
         <FilterButton active={filter === 'infrastructure'} onClick={() => setFilter('infrastructure')}>
           Infrastructure
         </FilterButton>
         <FilterButton active={filter === 'economic'} onClick={() => setFilter('economic')}>
           Economic
+        </FilterButton>
+        <FilterButton active={filter === 'geopolitical'} onClick={() => setFilter('geopolitical')}>
+          Geopolitical
         </FilterButton>
       </FilterButtons>
 

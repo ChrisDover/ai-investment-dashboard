@@ -61,24 +61,34 @@ const StatusIndicator = styled.span`
   margin-left: 10px;
 `;
 
-const AGIProgressTracker = () => {
+const SemiconductorSupercycleTracker = () => {
   const [currentYear] = useState(new Date().getFullYear());
-  const targetYear = 2040;
+  const targetYear = 2030;
   const yearsRemaining = targetYear - currentYear;
-  const progressPercentage = ((currentYear - 2023) / (targetYear - 2023)) * 100;
+  const progressPercentage = ((currentYear - 2020) / (targetYear - 2020)) * 100;
 
-  // AGI progress data - tracking key capability milestones
+  // Semiconductor supercycle progress - tracking revenue toward $1T target
   const generateProgressData = () => {
     const data = [];
     const startYear = 2020;
+    const baseRevenue = 440; // $440B in 2020
+    const targetRevenue = 1000; // $1T target by 2030
 
-    for (let year = startYear; year <= 2045; year++) {
+    for (let year = startYear; year <= 2035; year++) {
+      const yearsSince = year - startYear;
+      const yearsToTarget = targetYear - startYear;
+
+      const expectedRevenue = baseRevenue + ((targetRevenue - baseRevenue) / yearsToTarget) * yearsSince;
+      const actualRevenue = year <= currentYear ? baseRevenue * Math.pow(1.22, yearsSince) : null;
+      const upperBound = baseRevenue * Math.pow(1.30, yearsSince); // 30% CAGR bull case
+      const lowerBound = baseRevenue * Math.pow(1.10, yearsSince); // 10% CAGR bear case
+
       const item = {
         year,
-        expectedCapability: Math.min(100, ((year - startYear) / (targetYear - startYear)) * 100),
-        actualCapability: year <= currentYear ? Math.min(100, ((year - startYear) / (targetYear - startYear)) * 85) : null,
-        upperBound: Math.min(100, ((year - startYear) / (targetYear - startYear)) * 115),
-        lowerBound: Math.min(100, ((year - startYear) / (targetYear - startYear)) * 70),
+        expectedRevenue: Math.min(targetRevenue * 1.5, expectedRevenue),
+        actualRevenue,
+        upperBound,
+        lowerBound,
       };
       data.push(item);
     }
@@ -88,16 +98,16 @@ const AGIProgressTracker = () => {
 
   const data = generateProgressData();
 
-  // Current AI capability score (0-100) - rough estimate based on benchmarks
-  const currentCapability = 42; // Based on ~2024-2025 models
-  const expectedCapability = ((currentYear - 2020) / (targetYear - 2020)) * 100;
-  const status = currentCapability >= expectedCapability * 0.9 ? 'on-track' :
-                 currentCapability >= expectedCapability * 0.7 ? 'warning' : 'behind';
+  // Current semiconductor revenue (est. ~$700B in 2025)
+  const currentRevenue = 440 * Math.pow(1.22, currentYear - 2020);
+  const expectedRevenue = 440 + ((1000 - 440) / (targetYear - 2020)) * (currentYear - 2020);
+  const status = currentRevenue >= expectedRevenue * 0.9 ? 'on-track' :
+                 currentRevenue >= expectedRevenue * 0.7 ? 'warning' : 'behind';
 
   return (
     <Card>
       <CardTitle>
-        AGI Progress Tracker: Path to 2040
+        Semiconductor Supercycle Tracker: Path to $1T+ by 2030
         <StatusIndicator status={status}>
           {status === 'on-track' ? 'ON TRACK' : status === 'warning' ? 'MONITORING' : 'BEHIND'}
         </StatusIndicator>
@@ -105,27 +115,27 @@ const AGIProgressTracker = () => {
 
       <MetricsGrid>
         <MetricBox color="#00ff00">
-          <MetricLabel>Years to AGI</MetricLabel>
+          <MetricLabel>Years to $1T Target</MetricLabel>
           <MetricValue color="#00ff00">{yearsRemaining}</MetricValue>
-          <MetricSubtext>Target: 2040 (70% probability)</MetricSubtext>
+          <MetricSubtext>Target: 2030 ($1T+ revenue)</MetricSubtext>
         </MetricBox>
 
         <MetricBox color="#ff6b00">
-          <MetricLabel>Current Capability Score</MetricLabel>
-          <MetricValue color="#ff6b00">{currentCapability}%</MetricValue>
-          <MetricSubtext>vs Expected: {expectedCapability.toFixed(1)}%</MetricSubtext>
+          <MetricLabel>Current Industry Revenue</MetricLabel>
+          <MetricValue color="#ff6b00">${currentRevenue.toFixed(0)}B</MetricValue>
+          <MetricSubtext>vs Expected: ${expectedRevenue.toFixed(0)}B</MetricSubtext>
         </MetricBox>
 
         <MetricBox color="#00aaff">
-          <MetricLabel>Timeline Progress</MetricLabel>
+          <MetricLabel>Supercycle Progress</MetricLabel>
           <MetricValue color="#00aaff">{progressPercentage.toFixed(1)}%</MetricValue>
-          <MetricSubtext>Since 2023 baseline</MetricSubtext>
+          <MetricSubtext>Since 2020 baseline ($440B)</MetricSubtext>
         </MetricBox>
 
         <MetricBox color="#aa00ff">
-          <MetricLabel>Scaling Confidence</MetricLabel>
-          <MetricValue color="#aa00ff">70%</MetricValue>
-          <MetricSubtext>Probability scaling works</MetricSubtext>
+          <MetricLabel>AI-Driven CAGR</MetricLabel>
+          <MetricValue color="#aa00ff">~22%</MetricValue>
+          <MetricSubtext>Actual 2020-2025 growth</MetricSubtext>
         </MetricBox>
       </MetricsGrid>
 
@@ -140,11 +150,12 @@ const AGIProgressTracker = () => {
           <YAxis
             stroke="#888"
             tick={{ fill: '#888' }}
-            label={{ value: 'AI Capability Progress (%)', angle: -90, position: 'insideLeft', fill: '#888' }}
+            label={{ value: 'Semiconductor Revenue ($B)', angle: -90, position: 'insideLeft', fill: '#888' }}
           />
           <Tooltip
             contentStyle={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '4px' }}
             labelStyle={{ color: '#ff6b00' }}
+            formatter={(value) => `$${value.toFixed(0)}B`}
           />
           <Legend wrapperStyle={{ color: '#888' }} />
 
@@ -155,25 +166,25 @@ const AGIProgressTracker = () => {
             strokeWidth={1}
             strokeDasharray="5 5"
             dot={false}
-            name="Optimistic Path (+15%)"
+            name="Bull Case (30% CAGR)"
           />
 
           <Line
             type="monotone"
-            dataKey="expectedCapability"
+            dataKey="expectedRevenue"
             stroke="#ff6b00"
             strokeWidth={3}
             dot={false}
-            name="Expected Path (Base Case)"
+            name="Expected Path ($1T by 2030)"
           />
 
           <Line
             type="monotone"
-            dataKey="actualCapability"
+            dataKey="actualRevenue"
             stroke="#00aaff"
             strokeWidth={3}
             dot={{ fill: '#00aaff', r: 4 }}
-            name="Actual Progress (2024-2025)"
+            name="Actual Revenue (~22% CAGR)"
           />
 
           <Line
@@ -183,14 +194,14 @@ const AGIProgressTracker = () => {
             strokeWidth={1}
             strokeDasharray="5 5"
             dot={false}
-            name="Pessimistic Path (-30%)"
+            name="Bear Case (10% CAGR)"
           />
 
           <ReferenceLine
-            x={2040}
+            x={2030}
             stroke="#00ff00"
             strokeWidth={2}
-            label={{ value: 'AGI Target: 2040', fill: '#00ff00', position: 'top' }}
+            label={{ value: 'Target: $1T+ (2030)', fill: '#00ff00', position: 'top' }}
           />
 
           <ReferenceLine
@@ -206,4 +217,4 @@ const AGIProgressTracker = () => {
   );
 };
 
-export default AGIProgressTracker;
+export default SemiconductorSupercycleTracker;

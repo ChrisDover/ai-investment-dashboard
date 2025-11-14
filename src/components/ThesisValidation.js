@@ -88,53 +88,58 @@ const SectionTitle = styled.h3`
 `;
 
 const ThesisValidation = () => {
-  // Core thesis assumptions and actual tracking
+  // Core thesis assumptions and actual tracking - SemiAnalysis three pillars
   const thesisMetrics = {
-    scaling: {
-      expected: 'Continuous gains through 2030',
-      actual: 'On track - GPT-4 → Claude 3.5 improvements',
-      status: 'on-track',
-      divergence: 0,
-      details: [
-        { label: 'Benchmark Progress', expected: '+15% YoY', actual: '+18% YoY', status: 'on-track' },
-        { label: 'Compute Efficiency', expected: '2x per year', actual: '2.3x per year', status: 'on-track' },
-        { label: 'Data Availability', expected: 'Sufficient to 2027', actual: 'Synthetic data working', status: 'on-track' }
-      ]
-    },
-    capex: {
-      expected: '$500B cumulative by 2025',
-      actual: '$520B cumulative (est.)',
-      status: 'on-track',
-      divergence: +4,
-      details: [
-        { label: 'MSFT CapEx Q3 2024', expected: '$14B', actual: '$14.9B', status: 'on-track' },
-        { label: 'GOOGL CapEx Q3 2024', expected: '$13B', actual: '$13.1B', status: 'on-track' },
-        { label: 'META CapEx Q3 2024', expected: '$9B', actual: '$9.2B', status: 'on-track' },
-        { label: 'AMZN CapEx Q3 2024', expected: '$16B', actual: '$15.8B', status: 'warning' }
-      ]
-    },
-    processNodes: {
-      expected: 'TSMC 2nm mass production Q2 2025',
-      actual: 'On schedule - risk production complete',
+    foundry: {
+      expected: 'TSMC consolidates leadership, 2nm on schedule',
+      actual: 'On track - 2nm risk production complete, mass production Q2 2025',
       status: 'on-track',
       divergence: 0,
       details: [
         { label: 'TSMC 2nm Readiness', expected: 'Q2 2025', actual: 'On track', status: 'on-track' },
-        { label: 'Yield Rates', expected: '>70%', actual: '~75% (estimated)', status: 'on-track' },
+        { label: 'TSMC CapEx 2024', expected: '$40-44B', actual: '$42B (est.)', status: 'on-track' },
+        { label: 'EUV Capacity', expected: 'ASML monopoly', actual: 'Secure, 200+ systems', status: 'on-track' },
         { label: 'Samsung 2nm', expected: 'Late 2025', actual: 'Delayed to 2026', status: 'warning' },
-        { label: 'Intel 18A', expected: 'Late 2024', actual: 'On track', status: 'on-track' }
+        { label: 'Intel 18A', expected: 'Late 2024', actual: 'On track', status: 'on-track' },
+        { label: 'China SMIC 7nm', expected: '<5% TAM', actual: '~3% TAM (no EUV)', status: 'on-track' }
       ]
     },
-    competition: {
-      expected: 'Nvidia maintains >80% datacenter GPU share',
-      actual: '~85% market share',
+    aiHardware: {
+      expected: 'Nvidia maintains >80% GPU share, challengers emerge',
+      actual: '~85% market share, Blackwell ramping',
       status: 'on-track',
       divergence: +5,
       details: [
-        { label: 'NVDA H100 Shipments', expected: 'Strong', actual: '550K+ units 2024', status: 'on-track' },
-        { label: 'AMD MI300 Adoption', expected: '<10% share', actual: '~8% share', status: 'on-track' },
-        { label: 'Custom ASICs', expected: '<5% TAM', actual: '~3% TAM', status: 'on-track' },
-        { label: 'Blackwell Ramp', expected: 'Q1 2025', actual: 'Confirmed Q1 2025', status: 'on-track' }
+        { label: 'NVDA H100 Shipments', expected: '500K+ units', actual: '550K+ units 2024', status: 'on-track' },
+        { label: 'Blackwell GB200', expected: 'Q1 2025', actual: 'Confirmed Q1 2025', status: 'on-track' },
+        { label: 'AMD MI300 Share', expected: '<10%', actual: '~8% (inference edge)', status: 'on-track' },
+        { label: 'HBM3E Availability', expected: 'Sufficient', actual: 'SK Hynix leading', status: 'on-track' },
+        { label: 'Custom ASICs', expected: '<5% TAM', actual: '~3% (Google TPU, AWS)', status: 'on-track' }
+      ]
+    },
+    datacenter: {
+      expected: 'CapEx $2T/year by 2030, energy bottlenecks',
+      actual: '$200B+ annual 2024, on trajectory',
+      status: 'on-track',
+      divergence: +2,
+      details: [
+        { label: 'Hyperscaler CapEx Q3 24', expected: '$55B', actual: '$53B', status: 'on-track' },
+        { label: 'Power Density', expected: '50x office', actual: 'Achieved (AI-ready)', status: 'on-track' },
+        { label: 'Transformer Lead Times', expected: '24+ months', actual: '24-36 months', status: 'warning' },
+        { label: 'Natural Gas Preference', expected: 'Dominant', actual: 'Yes (US reserves)', status: 'on-track' },
+        { label: 'CoWoS Shortages', expected: 'Easing 2025', actual: 'Expansion planned', status: 'on-track' }
+      ]
+    },
+    geopolitical: {
+      expected: 'US-China decoupling, $100B+ trade losses',
+      actual: 'Export controls active, CHIPS Act funding',
+      status: 'on-track',
+      divergence: 0,
+      details: [
+        { label: 'CHIPS Act Funding', expected: '$52B', actual: '$52B deployed', status: 'on-track' },
+        { label: 'China Fab Capacity', expected: '~30% by 2030', actual: 'On track (~25% 2024)', status: 'on-track' },
+        { label: 'Export Controls', expected: 'Sustained', actual: 'Active (HBM, EUV)', status: 'on-track' },
+        { label: 'Taiwan Risk', expected: 'Monitoring', actual: 'Stable (subsidies)', status: 'on-track' }
       ]
     }
   };
@@ -150,21 +155,21 @@ const ThesisValidation = () => {
 
   return (
     <Card>
-      <CardTitle>Thesis Validation: Core Assumptions Check</CardTitle>
+      <CardTitle>Thesis Validation: SemiAnalysis Semiconductor Supercycle</CardTitle>
 
       <ValidationGrid>
-        {/* Scaling Laws Validation */}
-        <ValidationCard status={thesisMetrics.scaling.status}>
-          <ValidationTitle>1. Scaling Laws Working</ValidationTitle>
+        {/* Pillar 1: Foundry Dominance */}
+        <ValidationCard status={thesisMetrics.foundry.status}>
+          <ValidationTitle>1. Foundry & Manufacturing Dominance</ValidationTitle>
           <MetricRow>
             <MetricLabel>Expected</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.scaling.expected}</MetricValue>
+            <MetricValue status="on-track">{thesisMetrics.foundry.expected}</MetricValue>
           </MetricRow>
           <MetricRow>
             <MetricLabel>Actual</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.scaling.actual}</MetricValue>
+            <MetricValue status="on-track">{thesisMetrics.foundry.actual}</MetricValue>
           </MetricRow>
-          {thesisMetrics.scaling.details.map((detail, idx) => (
+          {thesisMetrics.foundry.details.map((detail, idx) => (
             <MetricRow key={idx}>
               <MetricLabel>{detail.label}</MetricLabel>
               <MetricValue status={detail.status}>
@@ -173,83 +178,83 @@ const ThesisValidation = () => {
               </MetricValue>
             </MetricRow>
           ))}
-          <DivergenceIndicator positive={thesisMetrics.scaling.divergence >= 0}>
-            {thesisMetrics.scaling.divergence >= 0 ? '✓ ' : '⚠ '}
-            Status: ON TRACK
+          <DivergenceIndicator positive={thesisMetrics.foundry.divergence >= 0}>
+            ✓ TSMC Leadership Holding
           </DivergenceIndicator>
         </ValidationCard>
 
-        {/* CapEx Validation */}
-        <ValidationCard status={thesisMetrics.capex.status}>
-          <ValidationTitle>2. CapEx Deployment</ValidationTitle>
+        {/* Pillar 2: AI Hardware Innovation */}
+        <ValidationCard status={thesisMetrics.aiHardware.status}>
+          <ValidationTitle>2. AI Hardware Innovation</ValidationTitle>
           <MetricRow>
-            <MetricLabel>Expected 2025 Cumulative</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.capex.expected}</MetricValue>
+            <MetricLabel>Expected</MetricLabel>
+            <MetricValue status="on-track">{thesisMetrics.aiHardware.expected}</MetricValue>
           </MetricRow>
           <MetricRow>
-            <MetricLabel>Actual Progress</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.capex.actual}</MetricValue>
+            <MetricLabel>Actual</MetricLabel>
+            <MetricValue status="on-track">{thesisMetrics.aiHardware.actual}</MetricValue>
           </MetricRow>
-          {thesisMetrics.capex.details.map((detail, idx) => (
+          {thesisMetrics.aiHardware.details.map((detail, idx) => (
             <MetricRow key={idx}>
               <MetricLabel>{detail.label}</MetricLabel>
               <MetricValue status={detail.status}>
                 {detail.actual}
-                <div style={{ fontSize: '0.75rem', color: '#666' }}>vs {detail.expected}</div>
+                {detail.expected && <div style={{ fontSize: '0.75rem', color: '#666' }}>vs {detail.expected}</div>}
               </MetricValue>
             </MetricRow>
           ))}
-          <DivergenceIndicator positive={thesisMetrics.capex.divergence >= 0}>
-            {thesisMetrics.capex.divergence >= 0 ? '+' : ''}{thesisMetrics.capex.divergence}% vs Expected
+          <DivergenceIndicator positive={thesisMetrics.aiHardware.divergence >= 0}>
+            {thesisMetrics.aiHardware.divergence >= 0 ? '+' : ''}{thesisMetrics.aiHardware.divergence}% Above Expected
           </DivergenceIndicator>
         </ValidationCard>
 
-        {/* Process Nodes Validation */}
-        <ValidationCard status={thesisMetrics.processNodes.status}>
-          <ValidationTitle>3. Process Node Roadmap</ValidationTitle>
+        {/* Pillar 3: Datacenter Expansion */}
+        <ValidationCard status={thesisMetrics.datacenter.status}>
+          <ValidationTitle>3. Datacenter Ecosystem Expansion</ValidationTitle>
           <MetricRow>
-            <MetricLabel>TSMC 2nm Timeline</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.processNodes.expected}</MetricValue>
+            <MetricLabel>Expected</MetricLabel>
+            <MetricValue status="on-track">{thesisMetrics.datacenter.expected}</MetricValue>
           </MetricRow>
           <MetricRow>
-            <MetricLabel>Current Status</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.processNodes.actual}</MetricValue>
+            <MetricLabel>Actual</MetricLabel>
+            <MetricValue status="on-track">{thesisMetrics.datacenter.actual}</MetricValue>
           </MetricRow>
-          {thesisMetrics.processNodes.details.map((detail, idx) => (
+          {thesisMetrics.datacenter.details.map((detail, idx) => (
             <MetricRow key={idx}>
               <MetricLabel>{detail.label}</MetricLabel>
               <MetricValue status={detail.status}>
                 {detail.actual}
-                <div style={{ fontSize: '0.75rem', color: '#666' }}>Target: {detail.expected}</div>
+                {detail.expected && <div style={{ fontSize: '0.75rem', color: '#666' }}>vs {detail.expected}</div>}
               </MetricValue>
             </MetricRow>
           ))}
-          <DivergenceIndicator positive={thesisMetrics.processNodes.divergence >= 0}>
-            ✓ Critical Path Holding
+          <DivergenceIndicator positive={thesisMetrics.datacenter.divergence >= 0}>
+            {thesisMetrics.datacenter.divergence >= 0 ? '+' : ''}{thesisMetrics.datacenter.divergence}% vs Expected
           </DivergenceIndicator>
         </ValidationCard>
 
-        {/* Competition Validation */}
-        <ValidationCard status={thesisMetrics.competition.status}>
-          <ValidationTitle>4. Competitive Landscape</ValidationTitle>
+        {/* Geopolitical Risks */}
+        <ValidationCard status={thesisMetrics.geopolitical.status}>
+          <ValidationTitle>4. Geopolitical Landscape</ValidationTitle>
           <MetricRow>
-            <MetricLabel>Thesis Assumption</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.competition.expected}</MetricValue>
+            <MetricLabel>Expected</MetricLabel>
+            <MetricValue status="on-track">{thesisMetrics.geopolitical.expected}</MetricValue>
           </MetricRow>
           <MetricRow>
-            <MetricLabel>Current Reality</MetricLabel>
-            <MetricValue status="on-track">{thesisMetrics.competition.actual}</MetricValue>
+            <MetricLabel>Actual</MetricLabel>
+            <MetricValue status="on-track">{thesisMetrics.geopolitical.actual}</MetricValue>
           </MetricRow>
-          {thesisMetrics.competition.details.map((detail, idx) => (
+          {thesisMetrics.geopolitical.details.map((detail, idx) => (
             <MetricRow key={idx}>
               <MetricLabel>{detail.label}</MetricLabel>
               <MetricValue status={detail.status}>
                 {detail.actual}
+                {detail.expected && <div style={{ fontSize: '0.75rem', color: '#666' }}>vs {detail.expected}</div>}
               </MetricValue>
             </MetricRow>
           ))}
-          <DivergenceIndicator positive={thesisMetrics.competition.divergence >= 0}>
-            {thesisMetrics.competition.divergence >= 0 ? '+' : ''}{thesisMetrics.competition.divergence}% Above Expected
+          <DivergenceIndicator positive={thesisMetrics.geopolitical.divergence >= 0}>
+            ✓ Risks Monitored
           </DivergenceIndicator>
         </ValidationCard>
       </ValidationGrid>

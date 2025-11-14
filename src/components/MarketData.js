@@ -80,26 +80,30 @@ const MarketData = () => {
   const [loading, setLoading] = useState(true);
   const [marketData, setMarketData] = useState({
     semiconductors: [],
-    hyperscalers: [],
+    aiHardware: [],
     infrastructure: [],
-    defensive: []
+    hedges: []
   });
 
   useEffect(() => {
     const stockNames = {
-      'NVDA': 'Nvidia',
       'TSM': 'TSMC',
-      'AMD': 'AMD',
       'ASML': 'ASML',
       'MU': 'Micron',
-      'MSFT': 'Microsoft',
-      'GOOGL': 'Google',
+      'AMD': 'AMD',
+      'INTC': 'Intel',
+      'NVDA': 'Nvidia',
+      'AVGO': 'Broadcom',
+      'ARM': 'Arm Holdings',
+      'AMZN': 'Amazon',
       'VRT': 'Vertiv',
       'ETN': 'Eaton',
       'EQT': 'EQT Corp',
-      'SPY': 'S&P 500',
+      'EQIX': 'Equinix',
+      'DLR': 'Digital Realty',
       'GLD': 'Gold',
-      'BTC-USD': 'Bitcoin'
+      'BTC-USD': 'Bitcoin',
+      'SMH': 'Semiconductor ETF'
     };
 
     const fetchMarketData = async () => {
@@ -117,9 +121,9 @@ const MarketData = () => {
 
         setMarketData({
           semiconductors: formatQuotes(data.semiconductors),
-          hyperscalers: formatQuotes(data.hyperscalers),
+          aiHardware: formatQuotes(data.aiHardware),
           infrastructure: formatQuotes(data.infrastructure),
-          defensive: formatQuotes(data.defensive)
+          hedges: formatQuotes(data.hedges)
         });
         setLoading(false);
       } catch (error) {
@@ -168,10 +172,10 @@ const MarketData = () => {
           </>
         )}
 
-        {marketData.hyperscalers.length > 0 && (
+        {marketData.aiHardware.length > 0 && (
           <>
-            <CategoryHeader>Hyperscalers & AI Labs</CategoryHeader>
-            {marketData.hyperscalers.map(stock => (
+            <CategoryHeader>AI Hardware & Accelerators</CategoryHeader>
+            {marketData.aiHardware.map(stock => (
               <StockCard key={stock.ticker} change={stock.change}>
                 <StockTicker>{stock.ticker}</StockTicker>
                 <StockName>{stock.name}</StockName>
@@ -200,10 +204,10 @@ const MarketData = () => {
           </>
         )}
 
-        {marketData.defensive.length > 0 && (
+        {marketData.hedges.length > 0 && (
           <>
-            <CategoryHeader>Defensive & Alternative Assets</CategoryHeader>
-            {marketData.defensive.map(stock => (
+            <CategoryHeader>Geopolitical Hedges</CategoryHeader>
+            {marketData.hedges.map(stock => (
               <StockCard key={stock.ticker} change={stock.change}>
                 <StockTicker>{stock.ticker}</StockTicker>
                 <StockName>{stock.name}</StockName>

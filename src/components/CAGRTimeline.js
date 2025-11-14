@@ -53,27 +53,27 @@ const MetricSubtext = styled.div`
 const CAGRTimeline = () => {
   const currentYear = new Date().getFullYear();
 
-  // Generate CAGR projection data
+  // Generate CAGR projection data for semiconductor revenue
   const generateCAGRData = () => {
     const data = [];
     const baseYear = 2020;
-    const baseRevenue = 10; // $10B baseline
+    const baseRevenue = 440; // ~$440B 2020 baseline (global semiconductor revenue)
 
-    // Expected: 20-40% CAGR in explosive scenario
-    // Bull case: 40% CAGR
-    // Base case: 30% CAGR
-    // Bear case: 15% CAGR
+    // SemiAnalysis expectations: 15-30% CAGR supercycle, pushing to $1T+ by 2030
+    // Bull case: 30% CAGR (explosive AI demand)
+    // Base case: 20% CAGR (sustained supercycle)
+    // Bear case: 10% CAGR (stalled scaling, AI winter)
 
-    for (let year = baseYear; year <= 2040; year++) {
+    for (let year = baseYear; year <= 2035; year++) {
       const yearsSince = year - baseYear;
 
       const item = {
         year,
-        bullCase: baseRevenue * Math.pow(1.40, yearsSince), // 40% CAGR
-        baseCase: baseRevenue * Math.pow(1.30, yearsSince), // 30% CAGR
-        bearCase: baseRevenue * Math.pow(1.15, yearsSince), // 15% CAGR (stalled scaling)
-        // Actual data up to current year (using ~35% actual CAGR)
-        actual: year <= currentYear ? baseRevenue * Math.pow(1.35, yearsSince) : null,
+        bullCase: baseRevenue * Math.pow(1.30, yearsSince), // 30% CAGR
+        baseCase: baseRevenue * Math.pow(1.20, yearsSince), // 20% CAGR
+        bearCase: baseRevenue * Math.pow(1.10, yearsSince), // 10% CAGR (stalled)
+        // Actual data up to current year (using ~22% actual CAGR 2020-2024)
+        actual: year <= currentYear ? baseRevenue * Math.pow(1.22, yearsSince) : null,
       };
 
       data.push(item);
@@ -91,35 +91,35 @@ const CAGRTimeline = () => {
 
   // Future projections
   const projection2030 = data.find(d => d.year === 2030);
-  const projection2040 = data.find(d => d.year === 2040);
+  const projection2035 = data.find(d => d.year === 2035);
 
   return (
     <Card>
-      <CardTitle>CAGR Timeline: Revenue Growth Projections</CardTitle>
+      <CardTitle>CAGR Timeline: Semiconductor Supercycle Revenue Projections</CardTitle>
 
       <MetricsGrid>
         <MetricBox color="#00ff00">
-          <MetricLabel>Current AI Revenue (Est.)</MetricLabel>
-          <MetricValue color="#00ff00">${currentActual.toFixed(1)}B</MetricValue>
+          <MetricLabel>Current Semiconductor Revenue (Est.)</MetricLabel>
+          <MetricValue color="#00ff00">${currentActual.toFixed(0)}B</MetricValue>
           <MetricSubtext>vs Base Case: {variance > 0 ? '+' : ''}{variance.toFixed(1)}%</MetricSubtext>
         </MetricBox>
 
         <MetricBox color="#ff6b00">
           <MetricLabel>2030 Base Projection</MetricLabel>
           <MetricValue color="#ff6b00">${projection2030.baseCase.toFixed(0)}B</MetricValue>
-          <MetricSubtext>30% CAGR from 2020</MetricSubtext>
+          <MetricSubtext>20% CAGR from 2020 | Target: $1T+</MetricSubtext>
         </MetricBox>
 
         <MetricBox color="#00aaff">
-          <MetricLabel>2040 Base Projection</MetricLabel>
-          <MetricValue color="#00aaff">${(projection2040.baseCase / 1000).toFixed(1)}T</MetricValue>
-          <MetricSubtext>Expected AI market size</MetricSubtext>
+          <MetricLabel>2035 Base Projection</MetricLabel>
+          <MetricValue color="#00aaff">${(projection2035.baseCase / 1000).toFixed(2)}T</MetricValue>
+          <MetricSubtext>Sustained AI-driven demand</MetricSubtext>
         </MetricBox>
 
         <MetricBox color="#aa00ff">
-          <MetricLabel>Bull Case 2040</MetricLabel>
-          <MetricValue color="#aa00ff">${(projection2040.bullCase / 1000).toFixed(1)}T</MetricValue>
-          <MetricSubtext>40% CAGR (explosive growth)</MetricSubtext>
+          <MetricLabel>Bull Case 2035</MetricLabel>
+          <MetricValue color="#aa00ff">${(projection2035.bullCase / 1000).toFixed(2)}T</MetricValue>
+          <MetricSubtext>30% CAGR (explosive growth)</MetricSubtext>
         </MetricBox>
       </MetricsGrid>
 
@@ -169,7 +169,7 @@ const CAGRTimeline = () => {
             stroke="#ff0000"
             strokeWidth={2}
             fill="url(#colorBear)"
-            name="Bear Case (15% CAGR - Stalled Scaling)"
+            name="Bear Case (10% CAGR - AI Winter)"
           />
 
           <Area
@@ -178,7 +178,7 @@ const CAGRTimeline = () => {
             stroke="#ff6b00"
             strokeWidth={3}
             fill="url(#colorBase)"
-            name="Base Case (30% CAGR)"
+            name="Base Case (20% CAGR - Supercycle)"
           />
 
           <Area
@@ -187,7 +187,7 @@ const CAGRTimeline = () => {
             stroke="#00ff00"
             strokeWidth={2}
             fill="url(#colorBull)"
-            name="Bull Case (40% CAGR - Explosive Growth)"
+            name="Bull Case (30% CAGR - Explosive Growth)"
           />
 
           <Area
@@ -197,7 +197,7 @@ const CAGRTimeline = () => {
             strokeWidth={4}
             fill="url(#colorActual)"
             dot={{ fill: '#00aaff', r: 5 }}
-            name="Actual (Est. 35% CAGR)"
+            name="Actual (Est. 22% CAGR)"
           />
 
           <ReferenceLine
@@ -205,14 +205,7 @@ const CAGRTimeline = () => {
             stroke="#ffaa00"
             strokeWidth={2}
             strokeDasharray="3 3"
-            label={{ value: '2030 Milestone', fill: '#ffaa00', position: 'top' }}
-          />
-
-          <ReferenceLine
-            x={2040}
-            stroke="#00ff00"
-            strokeWidth={2}
-            label={{ value: '2040 Target', fill: '#00ff00', position: 'top' }}
+            label={{ value: '2030 Target: $1T+', fill: '#ffaa00', position: 'top' }}
           />
 
           <ReferenceLine

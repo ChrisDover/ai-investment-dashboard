@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import AGIProgressTracker from './components/AGIProgressTracker';
+import SemiconductorSupercycleTracker from './components/AGIProgressTracker';
 import CAGRTimeline from './components/CAGRTimeline';
 import KeyMilestones from './components/KeyMilestones';
 import PortfolioAllocation from './components/PortfolioAllocation';
@@ -134,8 +134,8 @@ function App() {
   return (
     <DashboardContainer>
       <Header>
-        <Title>AI INVESTMENT DASHBOARD</Title>
-        <Subtitle>Alerts | Thesis Validation | Trading Signals | News | Scenarios | Deep Dives | Performance Tracking</Subtitle>
+        <Title>SEMICONDUCTOR SUPERCYCLE DASHBOARD</Title>
+        <Subtitle>SemiAnalysis Investment Thesis | TSMC 2nm Tracking | Nvidia Blackwell | $1T Revenue Target by 2030</Subtitle>
       </Header>
 
       <GridContainer>
@@ -181,7 +181,7 @@ function App() {
 
         {/* PRIORITY 5: Long-term Tracking & Context */}
         <FullWidthSection>
-          <AGIProgressTracker />
+          <SemiconductorSupercycleTracker />
         </FullWidthSection>
 
         <FullWidthSection>

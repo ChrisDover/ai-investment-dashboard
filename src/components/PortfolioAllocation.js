@@ -75,35 +75,35 @@ const ExpectedReturn = styled.div`
 const PortfolioAllocation = () => {
   const portfolioData = [
     {
-      name: 'AI/Tech/Semiconductors',
-      allocation: 45,
+      name: 'Foundries & Semiconductors',
+      allocation: 40,
       color: '#ff6b00',
-      holdings: ['NVDA', 'TSM', 'MSFT', 'AMD', 'GOOGL', 'ASML', 'MU'],
-      description: 'Foundation models, hyperscalers, foundries, memory',
-      expectedReturn: '20-50% CAGR'
+      holdings: ['TSM', 'ASML', 'MU', 'AMD', 'INTC'],
+      description: 'TSMC leadership, EUV equipment, HBM memory, fab enablers',
+      expectedReturn: '20-30% CAGR (supercycle)'
     },
     {
-      name: 'Infrastructure/Energy',
+      name: 'AI Hardware & Accelerators',
       allocation: 30,
       color: '#00aaff',
-      holdings: ['EQT', 'VRT', 'ETN', 'GE', 'FSLR', 'EQIX', 'DLR'],
-      description: 'Natural gas, datacenters, power infrastructure',
-      expectedReturn: '15-30% CAGR'
+      holdings: ['NVDA', 'AVGO', 'ARM', 'AMZN'],
+      description: 'Nvidia dominance, networking silicon, Arm ecosystem, hyperscaler vertical integration',
+      expectedReturn: '25-40% CAGR (explosive growth)'
     },
     {
-      name: 'Broad Market/Hedges',
-      allocation: 15,
+      name: 'Infrastructure & Energy',
+      allocation: 20,
       color: '#00ff00',
-      holdings: ['SPY', 'QQQ', 'ARKK'],
-      description: 'Broad exposure to AI-amplified growth',
-      expectedReturn: '10-20% CAGR'
+      holdings: ['VRT', 'ETN', 'EQT', 'EQIX', 'DLR'],
+      description: 'Datacenter power (transformers, switchgear), natural gas, REITs',
+      expectedReturn: '15-25% CAGR'
     },
     {
-      name: 'Defensive/Geopolitical',
+      name: 'Geopolitical Hedges',
       allocation: 10,
       color: '#ffaa00',
-      holdings: ['GLD', 'BTC'],
-      description: 'Hedge against misalignment, regulatory overreach, decoupling',
+      holdings: ['GLD', 'BTC', 'SMH'],
+      description: 'Hedge against US-China decoupling, export controls, semiconductor ETF diversification',
       expectedReturn: '5-15% CAGR'
     }
   ];
@@ -112,7 +112,7 @@ const PortfolioAllocation = () => {
 
   return (
     <Card>
-      <CardTitle>Portfolio Allocation: Thesis-Aligned Strategy</CardTitle>
+      <CardTitle>Portfolio Allocation: Semiconductor Supercycle Strategy</CardTitle>
 
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>

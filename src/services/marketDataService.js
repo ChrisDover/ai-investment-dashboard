@@ -1,18 +1,30 @@
-// Portfolio allocation based on thesis
+// Portfolio allocation based on SemiAnalysis semiconductor thesis
+// 40% Foundries/Semis, 30% AI Hardware, 20% Infrastructure, 10% Hedges
 export const PORTFOLIO_ALLOCATION = {
-  'NVDA': 0.25,   // 25%
-  'TSM': 0.08,    // 8%
-  'MSFT': 0.10,   // 10%
-  'GOOGL': 0.07,  // 7%
-  'AMD': 0.05,    // 5%
-  'ASML': 0.05,   // 5%
-  'MU': 0.05,     // 5%
-  'VRT': 0.06,    // 6%
-  'ETN': 0.04,    // 4%
-  'EQT': 0.05,    // 5%
-  'SPY': 0.10,    // 10%
-  'GLD': 0.05,    // 5%
-  'BTC-USD': 0.05 // 5%
+  // Foundries & Semiconductors (40%)
+  'TSM': 0.15,     // 15% - TSMC leadership
+  'ASML': 0.08,    // 8% - EUV monopoly
+  'MU': 0.07,      // 7% - HBM memory
+  'AMD': 0.05,     // 5% - Value play
+  'INTC': 0.05,    // 5% - Intel 18A recovery
+
+  // AI Hardware & Accelerators (30%)
+  'NVDA': 0.15,    // 15% - GPU dominance
+  'AVGO': 0.08,    // 8% - Networking silicon
+  'ARM': 0.04,     // 4% - Arm ecosystem
+  'AMZN': 0.03,    // 3% - Hyperscaler vertical integration
+
+  // Infrastructure & Energy (20%)
+  'VRT': 0.06,     // 6% - Datacenter power
+  'ETN': 0.05,     // 5% - Transformers/switchgear
+  'EQT': 0.04,     // 4% - Natural gas
+  'EQIX': 0.03,    // 3% - Datacenter REITs
+  'DLR': 0.02,     // 2% - Datacenter REITs
+
+  // Geopolitical Hedges (10%)
+  'GLD': 0.04,     // 4% - Gold hedge
+  'BTC-USD': 0.03, // 3% - Bitcoin hedge
+  'SMH': 0.03      // 3% - Semiconductor ETF diversification
 };
 
 // Start date for tracking (ChatGPT release was Nov 2022, but let's use Jan 1, 2023 for clean data)
@@ -307,25 +319,25 @@ export const getAllMarketData = async () => {
   const quotes = await getMultipleQuotes(symbols);
 
   const semiconductors = quotes.filter(q =>
-    ['NVDA', 'TSM', 'AMD', 'ASML', 'MU'].includes(q.symbol)
+    ['TSM', 'ASML', 'MU', 'AMD', 'INTC'].includes(q.symbol)
   );
 
-  const hyperscalers = quotes.filter(q =>
-    ['MSFT', 'GOOGL'].includes(q.symbol)
+  const aiHardware = quotes.filter(q =>
+    ['NVDA', 'AVGO', 'ARM', 'AMZN'].includes(q.symbol)
   );
 
   const infrastructure = quotes.filter(q =>
-    ['VRT', 'ETN', 'EQT'].includes(q.symbol)
+    ['VRT', 'ETN', 'EQT', 'EQIX', 'DLR'].includes(q.symbol)
   );
 
-  const defensive = quotes.filter(q =>
-    ['SPY', 'GLD', 'BTC-USD'].includes(q.symbol)
+  const hedges = quotes.filter(q =>
+    ['GLD', 'BTC-USD', 'SMH'].includes(q.symbol)
   );
 
   return {
     semiconductors,
-    hyperscalers,
+    aiHardware,
     infrastructure,
-    defensive
+    hedges
   };
 };

@@ -1,57 +1,60 @@
-# AI Investment Dashboard
+# Semiconductor Supercycle Dashboard
 
-A comprehensive React dashboard for tracking the path to AGI (Artificial General Intelligence) by 2040, monitoring semiconductor supercycle trends, and managing AI-focused investment portfolios.
+A comprehensive React dashboard for tracking the semiconductor industry supercycle driven by AI demand, monitoring foundry roadmaps, accelerator competition, and managing a semiconductor-focused investment portfolio based on SemiAnalysis research.
 
 ## Overview
 
-This dashboard integrates insights from leading AI researchers and semiconductor analysts to provide real-time tracking of:
+This dashboard integrates insights from SemiAnalysis's extensive semiconductor coverage to provide real-time tracking of:
 
-- **AGI Progress**: Burndown chart tracking capabilities toward 2040 target (70% probability)
-- **CAGR Timeline**: Revenue growth projections across bull/base/bear scenarios (15-40% CAGR)
-- **Key Milestones**: Critical events like TSMC 2nm production, Nvidia Blackwell, GPT-5, etc.
-- **Portfolio Allocation**: Thesis-aligned strategy across semiconductors, infrastructure, and hedges
-- **Market Data**: Real-time tracking of key holdings (NVDA, TSM, MSFT, AMD, etc.)
+- **Semiconductor Supercycle Progress**: Tracking revenue growth toward $1T+ target by 2030
+- **CAGR Timeline**: Revenue projections across bull/base/bear scenarios (10-30% CAGR)
+- **Key Milestones**: TSMC 2nm production, Nvidia Blackwell, HBM4, CoWoS expansion, etc.
+- **Portfolio Allocation**: Semiconductor-focused strategy across foundries, AI hardware, infrastructure, and hedges
+- **Market Data**: Real-time tracking of key holdings (TSM, NVDA, ASML, MU, AMD, etc.)
 
 ## Investment Thesis
 
-Based on comprehensive research from Dwarkesh Patel and SemiAnalysis, this dashboard tracks a bullish stance on:
+Based on comprehensive research from SemiAnalysis, this dashboard tracks a bullish stance on the semiconductor supercycle:
 
-1. **AI Scaling** (70% confidence): Continued scaling will unlock AGI-like capabilities by 2030-2040
-2. **Semiconductor Supercycle**: AI-driven compute demand growing 50-60% quarterly since 2023
-3. **Infrastructure Buildout**: $6.7T datacenter CapEx by 2030 ($2T/year at peak)
-4. **Portfolio Strategy**: 45% AI/Tech/Semis, 30% Infrastructure, 15% Broad Market, 10% Defensive
+1. **Foundry Dominance**: TSMC consolidates leadership with 2nm GAA + backside power (2024-2025)
+2. **AI Hardware Innovation**: Nvidia maintains >80% GPU share; challengers emerge (AMD MI300, custom ASICs)
+3. **Datacenter Expansion**: $2T annual CapEx by 2030, with energy/power as key bottlenecks
+4. **Portfolio Strategy**: 40% Foundries/Semis, 30% AI Hardware, 20% Infrastructure, 10% Geopolitical Hedges
 
 ## Features
 
-### 1. AGI Progress Tracker
-- Current capability score vs. expected timeline
-- Years remaining to 2040 target
-- Optimistic/base/pessimistic path visualization
-- 70% scaling confidence probability
+### 1. Semiconductor Supercycle Tracker
+- Current industry revenue vs. $1T target
+- Years remaining to 2030 milestone
+- Bull/base/bear revenue projections
+- AI-driven CAGR tracking (~22% actual 2020-2025)
 
 ### 2. CAGR Timeline
-- Bull case: 40% CAGR (explosive growth scenario)
-- Base case: 30% CAGR (expected path)
-- Bear case: 15% CAGR (stalled scaling)
-- Actual performance tracking vs. projections
+- Bull case: 30% CAGR (explosive AI demand)
+- Base case: 20% CAGR (sustained supercycle)
+- Bear case: 10% CAGR (AI winter scenario)
+- Actual semiconductor revenue tracking
 
 ### 3. Key Milestones Tracker
-- **Chips & Semiconductors**: TSMC 2nm/1.4nm, Nvidia Blackwell, HBM4
-- **AI Models**: GPT-5, Claude 3, ARC-AGI benchmarks
-- **Infrastructure**: 1GW datacenters, $2T annual CapEx
-- **Economic**: $100B+ AI revenues, market cap milestones
+- **Foundry & Process Nodes**: TSMC 2nm/1.4nm, Samsung delays, Intel 18A
+- **AI Accelerators**: Nvidia Blackwell, AMD MI350, custom ASICs
+- **Memory & HBM**: SK Hynix HBM4, Micron capacity expansion
+- **Infrastructure**: 1GW datacenters, CoWoS packaging expansion
+- **Economic**: $1T semiconductor revenue, $2T annual CapEx
+- **Geopolitical**: CHIPS Act, US-China decoupling, export controls
 
 ### 4. Portfolio Allocation
-- **AI/Tech/Semiconductors (45%)**: NVDA, TSM, MSFT, AMD, GOOGL, ASML, MU
-- **Infrastructure/Energy (30%)**: EQT, VRT, ETN, GE, FSLR, EQIX, DLR
-- **Broad Market (15%)**: SPY, QQQ, ARKK
-- **Defensive (10%)**: GLD, BTC
+- **Foundries & Semiconductors (40%)**: TSM, ASML, MU, AMD, INTC
+- **AI Hardware & Accelerators (30%)**: NVDA, AVGO, ARM, AMZN
+- **Infrastructure & Energy (20%)**: VRT, ETN, EQT, EQIX, DLR
+- **Geopolitical Hedges (10%)**: GLD, BTC, SMH
 
-### 5. Market Data
-Real-time tracking of key holdings across:
-- Semiconductors & Foundries
-- Hyperscalers & AI Labs
-- Infrastructure & Energy
+### 5. Thesis Validation
+Real-time tracking of SemiAnalysis's three core pillars:
+- Foundry & Manufacturing Dominance (TSMC leadership)
+- AI Hardware Innovation (Nvidia vs. challengers)
+- Datacenter Ecosystem Expansion (CapEx, energy bottlenecks)
+- Geopolitical Landscape (US-China, CHIPS Act)
 
 ## Tech Stack
 
@@ -118,26 +121,29 @@ For real production use, integrate:
 
 ## Key Metrics Tracked
 
-### AGI Progress
-- Current capability score: 42% (2024-2025 baseline)
-- Expected capability: ~33% (based on 2020-2040 linear progression)
-- Status: ON TRACK (within 90% of expected)
+### Semiconductor Supercycle Progress
+- Current semiconductor revenue: ~$700B (2025 est.)
+- Expected 2030 revenue: $1,072B (base case, 20% CAGR)
+- Bull case 2030: $1,313B (30% CAGR)
+- Status: ON TRACK (~22% actual CAGR 2020-2025)
 
 ### Revenue Projections
-- Current AI revenue (est.): ~$149B
-- 2030 projection (base): $196B
-- 2040 projection (base): $13.8T
-- Bull case 2040: $29.2T (40% CAGR)
+- 2020 baseline: $440B
+- Current 2025 (est.): ~$700B
+- 2030 target: $1T+ (base case)
+- 2035 projection: $2.66T (base case, 20% CAGR)
 
 ### Critical Milestones
 - ✅ TSMC 3nm production (Q4 2023)
 - ✅ Nvidia H100 deployment (Q2 2023)
+- ✅ SK Hynix HBM3E production (Q3 2023)
 - ✅ TSMC 2nm risk production (Q4 2024)
-- 🟡 Nvidia Blackwell B200 (Q1 2025 - in progress)
+- 🟡 Nvidia Blackwell GB200 (Q1 2025 - in progress)
 - 🔲 TSMC 2nm mass production (Q2 2025)
-- 🔲 GPT-5 / Next-gen models (Q3 2025)
+- 🔲 AMD MI350 launch (Q4 2025)
+- 🔲 HBM4 mass production (Q2 2026)
 - 🔲 1GW datacenters (Q4 2026)
-- 🔲 AGI threshold (Q2 2040 - 70% probability)
+- 🔲 Semiconductor revenue >$1T (Q4 2029)
 
 ## Color Scheme
 
@@ -160,9 +166,14 @@ MIT License
 
 ## Credits
 
-Investment thesis synthesized from:
-- **Dwarkesh Patel**: AI scaling optimism, infrastructure buildout analysis
-- **SemiAnalysis**: Semiconductor industry insights, datacenter models, foundry analysis
+Investment thesis based on:
+- **SemiAnalysis**: Comprehensive semiconductor industry coverage including:
+  - Datacenter Industry Model and Accelerator Model
+  - Foundry process node analysis (TSMC, Samsung, Intel)
+  - AI accelerator competitive landscape (Nvidia, AMD, startups)
+  - Memory and HBM technology roadmaps
+  - Supply chain dynamics and geopolitical risks
+  - Energy and infrastructure buildout analysis
 
 Dashboard developed with Claude Code (Anthropic).
 
@@ -171,4 +182,4 @@ Dashboard developed with Claude Code (Anthropic).
 **Last Updated**: November 2025
 **Version**: 1.0.0
 **Author**: Chris Dover
-**Website**: [trading.pollinatetrading.com/ai](https://trading.pollinatetrading.com/ai)
+**Website**: [trading.pollinatetrading.com/semianalsys](https://trading.pollinatetrading.com/semianalsys)
