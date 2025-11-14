@@ -16,6 +16,10 @@ const Card = styled.div`
   border-radius: 8px;
   padding: 25px;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 
   @media (max-width: 768px) {
     padding: 20px;
@@ -24,6 +28,11 @@ const Card = styled.div`
 
   @media (max-width: 480px) {
     padding: 15px;
+    border-radius: 6px;
+  }
+
+  @media (max-width: 360px) {
+    padding: 12px;
   }
 `;
 
@@ -49,15 +58,22 @@ const PerformanceSummary = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 15px;
   margin-bottom: 30px;
+  width: 100%;
+  max-width: 100%;
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
+  }
+
+  @media (max-width: 360px) {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 `;
 
@@ -66,6 +82,10 @@ const SummaryCard = styled.div`
   padding: 20px;
   border-radius: 6px;
   border-left: 4px solid ${props => props.color || '#ff6b00'};
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 
   @media (max-width: 768px) {
     padding: 15px;
@@ -73,6 +93,10 @@ const SummaryCard = styled.div`
 
   @media (max-width: 480px) {
     padding: 12px;
+  }
+
+  @media (max-width: 360px) {
+    padding: 10px 8px;
   }
 `;
 

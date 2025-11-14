@@ -12,6 +12,10 @@ const BLUFContainer = styled.div`
   padding: 30px;
   margin-bottom: 30px;
   box-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 
   @media (max-width: 768px) {
     padding: 20px;
@@ -21,6 +25,11 @@ const BLUFContainer = styled.div`
   @media (max-width: 480px) {
     padding: 15px;
     margin-bottom: 15px;
+    border-radius: 6px;
+  }
+
+  @media (max-width: 360px) {
+    padding: 12px;
   }
 `;
 
@@ -101,6 +110,8 @@ const KeyTakeawaysGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 15px;
   margin-bottom: 25px;
+  width: 100%;
+  max-width: 100%;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -108,6 +119,7 @@ const KeyTakeawaysGrid = styled.div`
   }
 
   @media (max-width: 480px) {
+    grid-template-columns: 1fr;
     gap: 10px;
     margin-bottom: 20px;
   }
@@ -121,6 +133,19 @@ const TakeawayCard = styled.div`
     props.type === 'opportunity' ? '#00ff00' :
     props.type === 'risk' ? '#ff0000' : '#ffaa00'
   };
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
+
+  @media (max-width: 360px) {
+    padding: 12px;
+  }
 `;
 
 const TakeawayType = styled.div`

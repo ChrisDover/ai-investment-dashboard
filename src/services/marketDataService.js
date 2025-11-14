@@ -94,7 +94,15 @@ export const calculatePortfolioPerformance = async (startDate = START_DATE) => {
       dataMap[symbol] = allHistoricalData[index];
     });
 
-    // Get all unique dates
+    // Filter out symbols with no data
+    const validSymbols = symbols.filter(symbol => dataMap[symbol] && dataMap[symbol].length > 0);
+
+    if (validSymbols.length === 0) {
+      console.error('No valid data for any symbols');
+      return [];
+    }
+
+    // Get dates where ALL symbols have data
     const allDates = new Set();
     Object.values(dataMap).forEach(data => {
       data.forEach(point => {
@@ -104,32 +112,70 @@ export const calculatePortfolioPerformance = async (startDate = START_DATE) => {
 
     const sortedDates = Array.from(allDates).sort();
 
-    // Calculate portfolio value for each date
-    const portfolioTimeSeries = [];
-    let initialValue = 100000; // Start with $100k
+    // Find the first common date where we have data for all symbols
+    let firstCommonDate = null;
+    const initialPrices = {};
 
-    sortedDates.forEach((date, index) => {
-      let portfolioValue = 0;
+    for (const date of sortedDates) {
+      let allSymbolsHaveData = true;
+      const tempPrices = {};
 
-      // For each holding, get price on this date
-      symbols.forEach(symbol => {
+      for (const symbol of validSymbols) {
         const symbolData = dataMap[symbol];
-        const allocation = PORTFOLIO_ALLOCATION[symbol];
-
-        // Find closest price data
         const dataPoint = symbolData.find(d =>
           d.date.toISOString().split('T')[0] === date
         );
 
-        if (dataPoint && symbolData[0]) {
-          const initialPrice = symbolData[0].close;
+        if (dataPoint) {
+          tempPrices[symbol] = dataPoint.close;
+        } else {
+          allSymbolsHaveData = false;
+          break;
+        }
+      }
+
+      if (allSymbolsHaveData) {
+        firstCommonDate = date;
+        Object.assign(initialPrices, tempPrices);
+        break;
+      }
+    }
+
+    if (!firstCommonDate) {
+      console.error('No common date found for all symbols');
+      return [];
+    }
+
+    // Calculate portfolio value for each date (starting from first common date)
+    const portfolioTimeSeries = [];
+    let initialValue = 100000; // Start with $100k
+    const startIndex = sortedDates.indexOf(firstCommonDate);
+
+    sortedDates.slice(startIndex).forEach((date) => {
+      let portfolioValue = 0;
+      let validCount = 0;
+
+      // For each holding, get price on this date
+      validSymbols.forEach(symbol => {
+        const symbolData = dataMap[symbol];
+        const allocation = PORTFOLIO_ALLOCATION[symbol];
+
+        // Find price data for this date
+        const dataPoint = symbolData.find(d =>
+          d.date.toISOString().split('T')[0] === date
+        );
+
+        if (dataPoint && initialPrices[symbol]) {
+          const initialPrice = initialPrices[symbol];
           const currentPrice = dataPoint.close;
           const priceReturn = currentPrice / initialPrice;
           portfolioValue += initialValue * allocation * priceReturn;
+          validCount++;
         }
       });
 
-      if (portfolioValue > 0) {
+      // Only add this data point if we have data for all symbols
+      if (validCount === validSymbols.length && portfolioValue > 0) {
         const portfolioReturn = ((portfolioValue - initialValue) / initialValue) * 100;
 
         portfolioTimeSeries.push({
