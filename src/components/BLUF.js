@@ -53,21 +53,25 @@ const BLUFTitle = styled.h2`
 
 const MarketStatus = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 15px;
   margin-bottom: 25px;
   padding-bottom: 20px;
   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
   flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
 
   @media (max-width: 768px) {
     gap: 10px;
     margin-bottom: 20px;
     padding-bottom: 15px;
+    align-items: flex-start;
   }
 
   @media (max-width: 480px) {
     font-size: 0.9rem;
+    gap: 8px;
   }
 `;
 
@@ -95,13 +99,26 @@ const StatusText = styled.div`
   color: #000;
   font-size: 1.2rem;
   font-weight: 700;
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
 
   @media (max-width: 768px) {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
   }
 
   @media (max-width: 480px) {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    width: 100%;
+  }
+
+  @media (max-width: 360px) {
+    font-size: 0.75rem;
   }
 `;
 
