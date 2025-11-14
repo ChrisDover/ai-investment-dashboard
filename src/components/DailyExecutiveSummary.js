@@ -306,7 +306,7 @@ const DailyExecutiveSummary = () => {
           <strong>Thesis Status: ON TRACK.</strong> All four core assumptions remain valid: (1) Scaling laws continue to hold with no saturation, (2) Hyperscaler CapEx tracking 4% ahead of projections at $520B cumulative, (3) TSMC 2nm on schedule with yields beating N3 ramp, (4) Nvidia maintaining 85% market share despite AMD competition.
         </RecommendationText>
         <RecommendationText>
-          <strong>Portfolio Performance:</strong> YTD return of +32.1% beats expected +30% and outperforms SPY by +10.9%. Risk-adjusted returns (Sharpe 1.85) are excellent with controlled drawdown (-5.2% max). Thesis validation metrics all green.
+          <strong>Portfolio Performance:</strong> YTD return of {stats[0].value} {stats[0].change} expected +30% and outperforms SPY by {stats[1].value}. Risk-adjusted returns (Sharpe {stats[2].value}) are {stats[2].change.toLowerCase()} with {stats[3].change.toLowerCase()} drawdown ({stats[3].value} max). Thesis validation metrics all green.
         </RecommendationText>
       </Section>
 
