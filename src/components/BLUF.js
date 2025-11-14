@@ -155,6 +155,11 @@ const TakeawayCard = styled.div`
   box-sizing: border-box;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  min-height: fit-content;
 
   @media (max-width: 480px) {
     padding: 15px;
@@ -175,18 +180,51 @@ const TakeawayType = styled.div`
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 8px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+  }
 `;
 
 const TakeawayText = styled.div`
   color: #fff;
   font-size: 1rem;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  max-width: 100%;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+    line-height: 1.3;
+  }
 `;
 
 const ActionsSection = styled.div`
   background: rgba(0, 0, 0, 0.9);
   padding: 20px;
   border-radius: 6px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
+
+  @media (max-width: 360px) {
+    padding: 12px;
+  }
 `;
 
 const ActionsTitle = styled.h3`
@@ -210,6 +248,27 @@ const ActionItem = styled.div`
   color: #fff;
   font-size: 0.95rem;
   line-height: 1.6;
+  width: 100%;
+  max-width: 100%;
+
+  > div {
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
 `;
 
 const ActionIcon = styled.div`
