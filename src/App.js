@@ -7,7 +7,6 @@ import PortfolioAllocation from './components/PortfolioAllocation';
 import MarketData from './components/MarketData';
 import ThesisValidation from './components/ThesisValidation';
 import AlertsPanel from './components/AlertsPanel';
-import TradingSignals from './components/TradingSignals';
 import PortfolioPerformance from './components/PortfolioPerformance';
 import NewsIntegration from './components/NewsIntegration';
 import ScenarioTesting from './components/ScenarioTesting';
@@ -148,13 +147,9 @@ function App() {
           <DailyExecutiveSummary />
         </FullWidthSection>
 
-        {/* PRIORITY 2: Critical Alerts & Trading Signals */}
+        {/* PRIORITY 2: Critical Alerts */}
         <FullWidthSection>
           <AlertsPanel />
-        </FullWidthSection>
-
-        <FullWidthSection>
-          <TradingSignals />
         </FullWidthSection>
 
         {/* PRIORITY 3: Performance & Thesis Validation */}

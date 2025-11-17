@@ -214,12 +214,12 @@ const ActionItem = styled.div`
 
 const ActionIcon = styled.div`
   background: ${props =>
-    props.action === 'buy' ? '#00ff00' :
-    props.action === 'sell' ? '#ff0000' :
-    props.action === 'hold' ? '#00aaff' : '#ffaa00'
+    props.action === 'opportunity' ? '#00ff00' :
+    props.action === 'risk' ? '#ff0000' :
+    props.action === 'watch' ? '#00aaff' : '#ffaa00'
   };
   color: #000;
-  width: 60px;
+  width: 80px;
   padding: 4px 8px;
   border-radius: 3px;
   font-weight: 700;
@@ -237,124 +237,144 @@ const Timestamp = styled.div`
   font-weight: 600;
 `;
 
-const DemoNotice = styled.div`
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(255, 107, 0, 0.5);
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  color: #fff;
-  font-size: 0.85rem;
+const LoadingMessage = styled.div`
+  color: #000;
   text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
 `;
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 const BLUF = () => {
   const currentDate = new Date();
-  const marketStatus = 'bullish'; // Could be 'bullish', 'neutral', 'bearish'
   const [portfolioReturn, setPortfolioReturn] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [marketStatus, setMarketStatus] = useState('neutral');
+  const [takeaways, setTakeaways] = useState([]);
+  const [actions, setActions] = useState([]);
 
   useEffect(() => {
-    const fetchPerformance = async () => {
+    const fetchData = async () => {
       try {
+        // Fetch portfolio performance
         const portfolioTimeSeries = await calculatePortfolioPerformance(START_DATE);
         if (portfolioTimeSeries.length > 0) {
           const latestReturn = portfolioTimeSeries[portfolioTimeSeries.length - 1].return;
           setPortfolioReturn(latestReturn);
+
+          // Determine market status based on return
+          if (latestReturn > 20) setMarketStatus('bullish');
+          else if (latestReturn < 10) setMarketStatus('bearish');
+          else setMarketStatus('neutral');
         }
+
+        // Fetch live news for takeaways
+        const tickers = 'NVDA,AMD,TSM,ASML,INTC,MU,GOOGL,MSFT,META';
+        const topics = 'technology,earnings';
+        const response = await fetch(`${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=20`);
+
+        if (response.ok) {
+          const newsData = await response.json();
+
+          // Generate takeaways from high-impact news
+          const newTakeaways = newsData
+            .filter(item => item.impact === 'high')
+            .slice(0, 4)
+            .map(item => {
+              let type = 'watch';
+              if (item.sentiment > 0.2) type = 'opportunity';
+              else if (item.sentiment < -0.2) type = 'risk';
+
+              return {
+                type,
+                text: item.summary.substring(0, 150) + '...'
+              };
+            });
+
+          setTakeaways(newTakeaways);
+
+          // Generate actions from news
+          const newsActions = newsData
+            .slice(0, 4)
+            .map(item => {
+              let action = 'watch';
+              if (item.sentiment > 0.2) action = 'opportunity';
+              else if (item.sentiment < -0.2) action = 'risk';
+
+              return {
+                action,
+                text: item.title
+              };
+            });
+
+          setActions(newsActions);
+        }
+
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching performance for BLUF:', error);
+        console.error('Error fetching BLUF data:', error);
         setLoading(false);
       }
     };
 
-    fetchPerformance();
+    fetchData();
 
     // Refresh every 15 minutes
-    const interval = setInterval(fetchPerformance, 15 * 60 * 1000);
+    const interval = setInterval(fetchData, 15 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
   const expectedReturn = 30.0; // Expected CAGR
   const delta = portfolioReturn - expectedReturn;
 
-  const takeaways = [
-    {
-      type: 'opportunity',
-      text: 'TSMC 2nm yields beating expectations by 8%. Strong catalyst for TSM position and validates AI infrastructure thesis.'
-    },
-    {
-      type: 'opportunity',
-      text: 'Nvidia Blackwell demand exceeding supply through mid-2025. Margins holding at 75%+. Maintain/add to NVDA position.'
-    },
-    {
-      type: 'risk',
-      text: 'AMD MI300 ramp slower than expected ($400M vs $600M target). Watch for MI350 benchmarks in Q4 2025 before adding.'
-    },
-    {
-      type: 'watch',
-      text: 'Natural gas prices up 25% M/M. Monitor datacenter economics. If sustained above $5/MMBtu, rotate from VRT/ETN to energy.'
-    }
-  ];
-
-  const actions = [
-    {
-      action: 'buy',
-      text: 'SK Hynix entry zone $180-185. HBM shortage intensifying. Position size: 3-5%.'
-    },
-    {
-      action: 'hold',
-      text: 'NVDA core position (25%). Blackwell ramp validates moat. Stop only if margins <60%.'
-    },
-    {
-      action: 'buy',
-      text: 'GOOGL attractive entry $165-170. Undervalued vs MSFT on AI, increasing CapEx 15%.'
-    },
-    {
-      action: 'watch',
-      text: 'AMD below $155 or MI350 design wins. Currently at $163, hold for better entry.'
-    }
-  ];
+  if (loading) {
+    return (
+      <BLUFContainer>
+        <BLUFTitle>⚡ BLUF: Bottom Line Up Front</BLUFTitle>
+        <LoadingMessage>Loading latest market intelligence...</LoadingMessage>
+      </BLUFContainer>
+    );
+  }
 
   return (
     <BLUFContainer>
       <BLUFTitle>⚡ BLUF: Bottom Line Up Front</BLUFTitle>
 
-      <DemoNotice>
-        ℹ️ Trading ideas and actions shown are illustrative examples for demonstration purposes. Portfolio performance metrics are calculated from real market data.
-      </DemoNotice>
-
       <MarketStatus>
         <StatusIndicator status={marketStatus} />
         <StatusText>
-          Market Status: {marketStatus.toUpperCase()} | Thesis ON TRACK | Portfolio: {loading ? 'Loading...' : `${portfolioReturn >= 0 ? '+' : ''}${portfolioReturn.toFixed(1)}% YTD (${delta >= 0 ? '+' : ''}${delta.toFixed(1)}% vs Expected)`}
+          Market Status: {marketStatus.toUpperCase()} | Thesis {delta >= 0 ? 'ON TRACK' : 'NEEDS ATTENTION'} | Portfolio: {loading ? 'Loading...' : `${portfolioReturn >= 0 ? '+' : ''}${portfolioReturn.toFixed(1)}% YTD (${delta >= 0 ? '+' : ''}${delta.toFixed(1)}% vs Expected)`}
         </StatusText>
       </MarketStatus>
 
-      <KeyTakeawaysGrid>
-        {takeaways.map((takeaway, idx) => (
-          <TakeawayCard key={idx} type={takeaway.type}>
-            <TakeawayType type={takeaway.type}>
-              {takeaway.type === 'opportunity' ? '🟢 OPPORTUNITY' :
-               takeaway.type === 'risk' ? '🔴 RISK' : '🟡 WATCH'}
-            </TakeawayType>
-            <TakeawayText>{takeaway.text}</TakeawayText>
-          </TakeawayCard>
-        ))}
-      </KeyTakeawaysGrid>
-
-      <ActionsSection>
-        <ActionsTitle>🎯 Top Actions for Today</ActionsTitle>
-        <ActionsList>
-          {actions.map((action, idx) => (
-            <ActionItem key={idx}>
-              <ActionIcon action={action.action}>{action.action}</ActionIcon>
-              <div>{action.text}</div>
-            </ActionItem>
+      {takeaways.length > 0 && (
+        <KeyTakeawaysGrid>
+          {takeaways.map((takeaway, idx) => (
+            <TakeawayCard key={idx} type={takeaway.type}>
+              <TakeawayType type={takeaway.type}>
+                {takeaway.type === 'opportunity' ? '🟢 OPPORTUNITY' :
+                 takeaway.type === 'risk' ? '🔴 RISK' : '🟡 WATCH'}
+              </TakeawayType>
+              <TakeawayText>{takeaway.text}</TakeawayText>
+            </TakeawayCard>
           ))}
-        </ActionsList>
-      </ActionsSection>
+        </KeyTakeawaysGrid>
+      )}
+
+      {actions.length > 0 && (
+        <ActionsSection>
+          <ActionsTitle>🎯 Latest Market Intelligence</ActionsTitle>
+          <ActionsList>
+            {actions.map((action, idx) => (
+              <ActionItem key={idx}>
+                <ActionIcon action={action.action}>{action.action}</ActionIcon>
+                <div>{action.text}</div>
+              </ActionItem>
+            ))}
+          </ActionsList>
+        </ActionsSection>
+      )}
 
       <Timestamp>
         Last updated: {currentDate.toLocaleString()} | Updates every 15 minutes

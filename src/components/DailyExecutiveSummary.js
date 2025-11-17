@@ -164,16 +164,7 @@ const RecommendationText = styled.div`
   margin-bottom: 8px;
 `;
 
-const DemoNotice = styled.div`
-  background: rgba(255, 107, 0, 0.1);
-  border: 1px solid #ff6b00;
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  color: #ff6b00;
-  font-size: 0.9rem;
-  text-align: center;
-`;
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 const DailyExecutiveSummary = () => {
   const today = new Date();
@@ -255,40 +246,38 @@ const DailyExecutiveSummary = () => {
       }
     };
 
+    const fetchNews = async () => {
+      try {
+        const tickers = 'NVDA,AMD,TSM,ASML,INTC,MU,GOOGL,MSFT,META';
+        const topics = 'technology,earnings';
+        const response = await fetch(`${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=10`);
+
+        if (response.ok) {
+          const newsData = await response.json();
+          const events = newsData.slice(0, 5).map(item => ({
+            impact: item.impact,
+            title: item.title,
+            description: item.summary.substring(0, 180) + '...'
+          }));
+          setKeyEvents(events);
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      }
+    };
+
     fetchPerformanceStats();
+    fetchNews();
 
     // Refresh every 15 minutes
-    const interval = setInterval(fetchPerformanceStats, 15 * 60 * 1000);
+    const interval = setInterval(() => {
+      fetchPerformanceStats();
+      fetchNews();
+    }, 15 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const keyEvents = [
-    {
-      impact: 'high',
-      title: 'TSMC 2nm Yields Beat Expectations',
-      description: 'N2 process showing 75-80% yields in risk production, ahead of schedule. Apple A19 and Nvidia next-gen chips on track for Q2 2025 ramp.'
-    },
-    {
-      impact: 'high',
-      title: 'Nvidia Blackwell Demand "Insane"',
-      description: 'Jensen Huang confirms Blackwell demand exceeds supply through mid-2025. Gross margins holding at 75%+ despite competition.'
-    },
-    {
-      impact: 'medium',
-      title: 'Microsoft Increases 2025 CapEx to $80B',
-      description: 'MSFT raises AI datacenter spending guidance by 45% Y/Y. Majority allocated to GPU procurement and facility buildout.'
-    },
-    {
-      impact: 'medium',
-      title: 'AMD MI300 Ramp Slower Than Expected',
-      description: 'Q4 revenue $400M vs $600M consensus, but design wins pipeline growing to $4.5B for 2025. Watch MI350 launch.'
-    },
-    {
-      impact: 'low',
-      title: 'Natural Gas Prices Up 25% Month-over-Month',
-      description: 'Datacenter demand driving nat gas to $4.80/MMBtu. Monitor impact on hyperscaler CapEx economics if trend continues.'
-    }
-  ];
+  const [keyEvents, setKeyEvents] = useState([]);
 
   return (
     <Card>
@@ -310,10 +299,6 @@ const DailyExecutiveSummary = () => {
           </StatBox>
         ))}
       </QuickStats>
-
-      <DemoNotice>
-        ℹ️ Portfolio performance metrics are calculated from real market data. Events and recommendations shown are illustrative examples for demonstration purposes.
-      </DemoNotice>
 
       <Section>
         <SectionTitle>Market Overview</SectionTitle>
@@ -338,41 +323,6 @@ const DailyExecutiveSummary = () => {
             </EventItem>
           ))}
         </EventsList>
-      </Section>
-
-      <Section>
-        <SectionTitle>Strategic Recommendations</SectionTitle>
-        <RecommendationBox>
-          <RecommendationTitle>🎯 Primary Action Items</RecommendationTitle>
-          <RecommendationText>
-            <strong>1. ADD:</strong> SK Hynix at $180-185 (3-5% position). HBM3E supply shortage intensifying with Blackwell ramp. Target: $240, Stop: $165.
-          </RecommendationText>
-          <RecommendationText>
-            <strong>2. HOLD:</strong> NVDA core position (25%). Blackwell demand validates moat, margins holding. Maintain until gross margin drops below 60%.
-          </RecommendationText>
-          <RecommendationText>
-            <strong>3. ADD:</strong> GOOGL at $165-170 (increase to 12% from 10%). Undervalued vs MSFT on AI exposure, CapEx ramping +15%.
-          </RecommendationText>
-          <RecommendationText>
-            <strong>4. WATCH:</strong> AMD for entry below $155 or MI350 benchmark confirmation. Current $163 not compelling vs risk.
-          </RecommendationText>
-        </RecommendationBox>
-      </Section>
-
-      <Section>
-        <SectionTitle>Risk Monitoring</SectionTitle>
-        <RecommendationBox>
-          <RecommendationTitle>⚠ Key Risks to Watch</RecommendationTitle>
-          <RecommendationText>
-            <strong>Geopolitical:</strong> China-Taiwan tensions remain elevated. Any military escalation would require immediate TSM exit and NVDA reduction by 50%.
-          </RecommendationText>
-          <RecommendationText>
-            <strong>Competition:</strong> AMD MI300 design wins growing. If AMD captures >15% market share by mid-2025, reassess NVDA allocation.
-          </RecommendationText>
-          <RecommendationText>
-            <strong>Energy Costs:</strong> Nat gas at $4.80/MMBtu (+25% M/M). If sustained above $5, datacenter economics could pressure margins. Consider rotating VRT/ETN to EQT.
-          </RecommendationText>
-        </RecommendationBox>
       </Section>
     </Card>
   );
