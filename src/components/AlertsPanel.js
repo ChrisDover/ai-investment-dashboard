@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { getExampleTimestamp, getTodayFormatted } from '../utils/dateUtils';
 
 const Card = styled.div`
   background: #1a1a1a;
@@ -164,6 +165,17 @@ const FilterButton = styled.button`
   }
 `;
 
+const DemoNotice = styled.div`
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid #ff6b00;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #ff6b00;
+  font-size: 0.9rem;
+  text-align: center;
+`;
+
 const AlertsPanel = () => {
   const [filter, setFilter] = useState('all');
 
@@ -174,7 +186,7 @@ const AlertsPanel = () => {
       title: 'TSMC 2nm Yields Exceeding Expectations',
       message: 'TSMC N2 process showing ~75% yield rates in risk production, beating N3 ramp by 2 months. This de-risks 2025 Apple/Nvidia adoption.',
       action: 'Consider adding TSM on pullbacks below $180. Target allocation: 8-10%',
-      timestamp: '2 hours ago',
+      timestamp: getExampleTimestamp(2),
       tags: ['TSM', 'Process Node', 'Bullish'],
       category: 'chips'
     },
@@ -184,7 +196,7 @@ const AlertsPanel = () => {
       title: 'Samsung 2nm Delayed to 2026',
       message: 'Samsung pushed 2nm GAA mass production from late 2025 to 2026 due to yield issues. This strengthens TSMC monopoly but creates supply risk if China tensions escalate.',
       action: 'Monitor TSMC capacity allocation. Hedge with Intel 18A progress',
-      timestamp: '5 hours ago',
+      timestamp: getExampleTimestamp(5),
       tags: ['Samsung', 'TSMC', 'Geopolitical Risk'],
       category: 'chips'
     },
@@ -194,7 +206,7 @@ const AlertsPanel = () => {
       title: 'Meta CapEx Guidance Raised +15% for 2025',
       message: 'META increased 2025 CapEx guidance to $42B (vs $36B prior), citing AI infrastructure buildout. Llama 4 training cluster expansion ahead of schedule.',
       action: 'Bullish for datacenter infrastructure: VRT, ETN, EQIX. Add exposure.',
-      timestamp: '1 day ago',
+      timestamp: getExampleTimestamp(24),
       tags: ['META', 'CapEx', 'Infrastructure'],
       category: 'capex'
     },
@@ -204,7 +216,7 @@ const AlertsPanel = () => {
       title: 'AMD MI300 Design Win at Major Hyperscaler',
       message: 'Reports suggest AMD secured significant MI300X deployment at GOOGL for inference workloads. First major design win challenging Nvidia dominance.',
       action: 'Watch NVDA margins closely. If AMD takes >15% share, reassess NVDA allocation.',
-      timestamp: '1 day ago',
+      timestamp: getExampleTimestamp(24),
       tags: ['AMD', 'NVDA', 'Competition'],
       category: 'competition'
     },
@@ -214,7 +226,7 @@ const AlertsPanel = () => {
       title: 'Scaling Laws Holding: GPT-5 Benchmarks Leaked',
       message: 'Unconfirmed benchmarks suggest OpenAI GPT-5 showing 40% improvement over GPT-4 on MMLU, confirming scaling thesis. Expected Q3 2025 launch.',
       action: 'Validates MSFT position. Bullish for compute demand (NVDA, AMD, TSM).',
-      timestamp: '2 days ago',
+      timestamp: getExampleTimestamp(48),
       tags: ['OpenAI', 'Scaling', 'MSFT'],
       category: 'models'
     },
@@ -224,7 +236,7 @@ const AlertsPanel = () => {
       title: 'Natural Gas Prices Spiking +20% M/M',
       message: 'Winter demand + datacenter consumption pushing nat gas prices up. Could impact datacenter economics if sustained above $4.50/MMBtu.',
       action: 'Monitor energy costs. If sustained, rotate from EQT to renewable infrastructure.',
-      timestamp: '2 days ago',
+      timestamp: getExampleTimestamp(48),
       tags: ['Energy', 'EQT', 'Risk'],
       category: 'infrastructure'
     },
@@ -234,7 +246,7 @@ const AlertsPanel = () => {
       title: 'Blackwell GB200 Shipments Accelerating',
       message: 'NVDA Blackwell systems shipping ahead of schedule to major hyperscalers. Initial reviews show 2.5x performance over H100 in training workloads.',
       action: 'Confirms NVDA moat. Maintain 25% allocation. Watch for gross margin guidance.',
-      timestamp: '3 days ago',
+      timestamp: getExampleTimestamp(72),
       tags: ['NVDA', 'Blackwell', 'Product Cycle'],
       category: 'chips'
     },
@@ -244,7 +256,7 @@ const AlertsPanel = () => {
       title: 'China Export Controls Tightening',
       message: 'US considering further restrictions on AI chip exports to China, including H20 variants. Could impact NVDA revenue (15-20% China exposure).',
       action: 'Monitor Q4 earnings. If China revenue drops >25%, reduce NVDA to 20%.',
-      timestamp: '4 days ago',
+      timestamp: getExampleTimestamp(96),
       tags: ['Geopolitical', 'NVDA', 'Policy Risk'],
       category: 'geopolitical'
     },
@@ -254,7 +266,7 @@ const AlertsPanel = () => {
       title: 'HBM Supply Shortage Intensifying',
       message: 'SK Hynix HBM3E allocation fully booked through mid-2025. Micron ramping HBM3E production to capture share. Pricing power increasing.',
       action: 'Add SK Hynix exposure via ETF. MU attractive below $95.',
-      timestamp: '5 days ago',
+      timestamp: getExampleTimestamp(120),
       tags: ['Memory', 'SK Hynix', 'MU'],
       category: 'chips'
     }
@@ -269,6 +281,10 @@ const AlertsPanel = () => {
   return (
     <Card>
       <CardTitle>⚠ Alert System: Divergence Detection</CardTitle>
+
+      <DemoNotice>
+        ⚠️ Demo Data - Showing example investment alerts with current timestamps ({getTodayFormatted()}). Real-time alert system coming soon.
+      </DemoNotice>
 
       <AlertsSummary>
         <SummaryBox color="#ff0000" onClick={() => setFilter('critical')}>

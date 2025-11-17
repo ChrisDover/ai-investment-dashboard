@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getMultipleQuotes } from '../services/marketDataService';
+import { getTodayFormatted } from '../utils/dateUtils';
 
 const Card = styled.div`
   background: #1a1a1a;
@@ -185,7 +187,33 @@ const ConfidenceValue = styled.div`
   text-align: right;
 `;
 
+const DemoNotice = styled.div`
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid #ff6b00;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #ff6b00;
+  font-size: 0.9rem;
+  text-align: center;
+`;
+
 const TradingSignals = () => {
+  const [livePrices, setLivePrices] = useState({});
+
+  useEffect(() => {
+    // Fetch live prices for the stocks mentioned in signals
+    const fetchPrices = async () => {
+      const quotes = await getMultipleQuotes(['NVDA', 'AMD', 'GOOGL', 'VRT']);
+      const pricesMap = {};
+      quotes.forEach(q => {
+        pricesMap[q.symbol] = q.price;
+      });
+      setLivePrices(pricesMap);
+    };
+    fetchPrices();
+  }, []);
+
   const signals = [
     {
       id: 1,
@@ -220,7 +248,7 @@ const TradingSignals = () => {
       confidence: 65,
       metrics: [
         { label: 'Expected Return', value: '+35%', positive: true },
-        { label: 'Current Price', value: '$163', positive: false },
+        { label: 'Current Price', value: livePrices['AMD'] ? `$${livePrices['AMD'].toFixed(2)}` : 'Loading...', positive: false },
         { label: 'Design Wins', value: 'Pending', positive: false },
         { label: 'Time Horizon', value: '9-12mo', positive: false }
       ]
@@ -238,7 +266,7 @@ const TradingSignals = () => {
       positionSize: '20-25%',
       confidence: 90,
       metrics: [
-        { label: 'Current Allocation', value: '25%', positive: true },
+        { label: 'Current Price', value: livePrices['NVDA'] ? `$${livePrices['NVDA'].toFixed(2)}` : 'Loading...', positive: false },
         { label: 'YTD Return', value: '+45%', positive: true },
         { label: 'Gross Margin', value: '75%', positive: true },
         { label: 'Market Share', value: '85%', positive: true }
@@ -257,7 +285,7 @@ const TradingSignals = () => {
       positionSize: '4-6%',
       confidence: 75,
       metrics: [
-        { label: 'Expected Return', value: '+33%', positive: true },
+        { label: 'Current Price', value: livePrices['VRT'] ? `$${livePrices['VRT'].toFixed(2)}` : 'Loading...', positive: false },
         { label: 'Order Backlog', value: '+40% YoY', positive: true },
         { label: 'P/E Ratio', value: '28', positive: false },
         { label: 'Time Horizon', value: '12-18mo', positive: false }
@@ -295,9 +323,9 @@ const TradingSignals = () => {
       positionSize: '8-10%',
       confidence: 80,
       metrics: [
+        { label: 'Current Price', value: livePrices['GOOGL'] ? `$${livePrices['GOOGL'].toFixed(2)}` : 'Loading...', positive: false },
         { label: 'Expected Return', value: '+25%', positive: true },
         { label: 'P/E vs MSFT', value: 'Cheaper', positive: true },
-        { label: 'AI Exposure', value: 'Growing', positive: true },
         { label: 'CapEx 2025', value: '+15%', positive: true }
       ]
     }
@@ -305,7 +333,11 @@ const TradingSignals = () => {
 
   return (
     <Card>
-      <CardTitle>📊 Trading Signals: Actionable Investment Ideas</CardTitle>
+      <CardTitle>📊 Trading Signals: Actionable Investment Ideas ({getTodayFormatted()})</CardTitle>
+
+      <DemoNotice>
+        ⚠️ Example Research Ideas - These are illustrative trading signals for demonstration purposes. Not financial advice. Current prices are LIVE from Alpha Vantage.
+      </DemoNotice>
 
       <SignalsGrid>
         {signals.map(signal => (

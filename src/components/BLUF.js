@@ -237,6 +237,17 @@ const Timestamp = styled.div`
   font-weight: 600;
 `;
 
+const DemoNotice = styled.div`
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 107, 0, 0.5);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 0.85rem;
+  text-align: center;
+`;
+
 const BLUF = () => {
   const currentDate = new Date();
   const marketStatus = 'bullish'; // Could be 'bullish', 'neutral', 'bearish'
@@ -309,6 +320,10 @@ const BLUF = () => {
   return (
     <BLUFContainer>
       <BLUFTitle>⚡ BLUF: Bottom Line Up Front</BLUFTitle>
+
+      <DemoNotice>
+        ℹ️ Trading ideas and actions shown are illustrative examples for demonstration purposes. Portfolio performance metrics are calculated from real market data.
+      </DemoNotice>
 
       <MarketStatus>
         <StatusIndicator status={marketStatus} />

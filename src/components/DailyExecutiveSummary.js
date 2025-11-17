@@ -164,6 +164,17 @@ const RecommendationText = styled.div`
   margin-bottom: 8px;
 `;
 
+const DemoNotice = styled.div`
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid #ff6b00;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #ff6b00;
+  font-size: 0.9rem;
+  text-align: center;
+`;
+
 const DailyExecutiveSummary = () => {
   const today = new Date();
   const dateString = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -299,6 +310,10 @@ const DailyExecutiveSummary = () => {
           </StatBox>
         ))}
       </QuickStats>
+
+      <DemoNotice>
+        ℹ️ Portfolio performance metrics are calculated from real market data. Events and recommendations shown are illustrative examples for demonstration purposes.
+      </DemoNotice>
 
       <Section>
         <SectionTitle>Market Overview</SectionTitle>
