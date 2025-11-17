@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { getExampleTimestamp, getTodayFormatted } from '../utils/dateUtils';
+import { formatTimeAgo } from '../utils/dateUtils';
 
 const Card = styled.div`
   background: #1a1a1a;
@@ -110,21 +110,6 @@ const AlertMessage = styled.div`
   margin-bottom: 10px;
 `;
 
-const AlertAction = styled.div`
-  color: #ff6b00;
-  font-size: 0.9rem;
-  font-weight: 700;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-
-  &::before {
-    content: '→';
-    font-size: 1.2rem;
-  }
-`;
-
 const AlertTags = styled.div`
   display: flex;
   gap: 8px;
@@ -165,112 +150,72 @@ const FilterButton = styled.button`
   }
 `;
 
-const DemoNotice = styled.div`
-  background: rgba(255, 107, 0, 0.1);
-  border: 1px solid #ff6b00;
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  color: #ff6b00;
-  font-size: 0.9rem;
+const LoadingMessage = styled.div`
+  color: #888;
   text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
 `;
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 const AlertsPanel = () => {
   const [filter, setFilter] = useState('all');
+  const [alerts, setAlerts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const alerts = [
-    {
-      id: 1,
-      severity: 'opportunity',
-      title: 'TSMC 2nm Yields Exceeding Expectations',
-      message: 'TSMC N2 process showing ~75% yield rates in risk production, beating N3 ramp by 2 months. This de-risks 2025 Apple/Nvidia adoption.',
-      action: 'Consider adding TSM on pullbacks below $180. Target allocation: 8-10%',
-      timestamp: getExampleTimestamp(2),
-      tags: ['TSM', 'Process Node', 'Bullish'],
-      category: 'chips'
-    },
-    {
-      id: 2,
-      severity: 'warning',
-      title: 'Samsung 2nm Delayed to 2026',
-      message: 'Samsung pushed 2nm GAA mass production from late 2025 to 2026 due to yield issues. This strengthens TSMC monopoly but creates supply risk if China tensions escalate.',
-      action: 'Monitor TSMC capacity allocation. Hedge with Intel 18A progress',
-      timestamp: getExampleTimestamp(5),
-      tags: ['Samsung', 'TSMC', 'Geopolitical Risk'],
-      category: 'chips'
-    },
-    {
-      id: 3,
-      severity: 'opportunity',
-      title: 'Meta CapEx Guidance Raised +15% for 2025',
-      message: 'META increased 2025 CapEx guidance to $42B (vs $36B prior), citing AI infrastructure buildout. Llama 4 training cluster expansion ahead of schedule.',
-      action: 'Bullish for datacenter infrastructure: VRT, ETN, EQIX. Add exposure.',
-      timestamp: getExampleTimestamp(24),
-      tags: ['META', 'CapEx', 'Infrastructure'],
-      category: 'capex'
-    },
-    {
-      id: 4,
-      severity: 'critical',
-      title: 'AMD MI300 Design Win at Major Hyperscaler',
-      message: 'Reports suggest AMD secured significant MI300X deployment at GOOGL for inference workloads. First major design win challenging Nvidia dominance.',
-      action: 'Watch NVDA margins closely. If AMD takes >15% share, reassess NVDA allocation.',
-      timestamp: getExampleTimestamp(24),
-      tags: ['AMD', 'NVDA', 'Competition'],
-      category: 'competition'
-    },
-    {
-      id: 5,
-      severity: 'opportunity',
-      title: 'Scaling Laws Holding: GPT-5 Benchmarks Leaked',
-      message: 'Unconfirmed benchmarks suggest OpenAI GPT-5 showing 40% improvement over GPT-4 on MMLU, confirming scaling thesis. Expected Q3 2025 launch.',
-      action: 'Validates MSFT position. Bullish for compute demand (NVDA, AMD, TSM).',
-      timestamp: getExampleTimestamp(48),
-      tags: ['OpenAI', 'Scaling', 'MSFT'],
-      category: 'models'
-    },
-    {
-      id: 6,
-      severity: 'warning',
-      title: 'Natural Gas Prices Spiking +20% M/M',
-      message: 'Winter demand + datacenter consumption pushing nat gas prices up. Could impact datacenter economics if sustained above $4.50/MMBtu.',
-      action: 'Monitor energy costs. If sustained, rotate from EQT to renewable infrastructure.',
-      timestamp: getExampleTimestamp(48),
-      tags: ['Energy', 'EQT', 'Risk'],
-      category: 'infrastructure'
-    },
-    {
-      id: 7,
-      severity: 'opportunity',
-      title: 'Blackwell GB200 Shipments Accelerating',
-      message: 'NVDA Blackwell systems shipping ahead of schedule to major hyperscalers. Initial reviews show 2.5x performance over H100 in training workloads.',
-      action: 'Confirms NVDA moat. Maintain 25% allocation. Watch for gross margin guidance.',
-      timestamp: getExampleTimestamp(72),
-      tags: ['NVDA', 'Blackwell', 'Product Cycle'],
-      category: 'chips'
-    },
-    {
-      id: 8,
-      severity: 'warning',
-      title: 'China Export Controls Tightening',
-      message: 'US considering further restrictions on AI chip exports to China, including H20 variants. Could impact NVDA revenue (15-20% China exposure).',
-      action: 'Monitor Q4 earnings. If China revenue drops >25%, reduce NVDA to 20%.',
-      timestamp: getExampleTimestamp(96),
-      tags: ['Geopolitical', 'NVDA', 'Policy Risk'],
-      category: 'geopolitical'
-    },
-    {
-      id: 9,
-      severity: 'opportunity',
-      title: 'HBM Supply Shortage Intensifying',
-      message: 'SK Hynix HBM3E allocation fully booked through mid-2025. Micron ramping HBM3E production to capture share. Pricing power increasing.',
-      action: 'Add SK Hynix exposure via ETF. MU attractive below $95.',
-      timestamp: getExampleTimestamp(120),
-      tags: ['Memory', 'SK Hynix', 'MU'],
-      category: 'chips'
-    }
-  ];
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch news for semiconductor and AI related companies
+        const tickers = 'NVDA,AMD,TSM,ASML,INTC,MU,GOOGL,MSFT,META';
+        const topics = 'technology,earnings';
+
+        const response = await fetch(`${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=50`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch alerts');
+        }
+
+        const newsData = await response.json();
+
+        // Convert news to alerts (only high and medium impact)
+        const alertsFromNews = newsData
+          .filter(item => item.impact === 'high' || item.impact === 'medium')
+          .map((item, index) => {
+            // Determine severity based on sentiment and impact
+            let severity = 'opportunity';
+            if (item.sentiment < -0.2) severity = 'critical';
+            else if (item.sentiment < -0.1 || (item.sentiment > 0.2)) severity = 'warning';
+
+            return {
+              id: index + 1,
+              severity,
+              title: item.title,
+              message: item.summary,
+              timestamp: formatTimeAgo(new Date(item.timestamp)),
+              tags: [...(item.tickers || []), ...(item.tags || [])].slice(0, 4),
+              url: item.url
+            };
+          })
+          .slice(0, 15); // Limit to top 15 alerts
+
+        setAlerts(alertsFromNews);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching alerts:', err);
+        setLoading(false);
+      }
+    };
+
+    fetchAlerts();
+
+    // Refresh alerts every 30 minutes
+    const interval = setInterval(fetchAlerts, 30 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredAlerts = filter === 'all' ? alerts : alerts.filter(a => a.severity === filter);
 
@@ -278,13 +223,24 @@ const AlertsPanel = () => {
   const warningCount = alerts.filter(a => a.severity === 'warning').length;
   const opportunityCount = alerts.filter(a => a.severity === 'opportunity').length;
 
+  const openArticle = (url) => {
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardTitle>⚠ Market Alerts: High-Impact Events</CardTitle>
+        <LoadingMessage>Loading market alerts...</LoadingMessage>
+      </Card>
+    );
+  }
+
   return (
     <Card>
-      <CardTitle>⚠ Alert System: Divergence Detection</CardTitle>
-
-      <DemoNotice>
-        ⚠️ Demo Data - Showing example investment alerts with current timestamps ({getTodayFormatted()}). Real-time alert system coming soon.
-      </DemoNotice>
+      <CardTitle>⚠ Market Alerts: High-Impact Events</CardTitle>
 
       <AlertsSummary>
         <SummaryBox color="#ff0000" onClick={() => setFilter('critical')}>
@@ -319,21 +275,28 @@ const AlertsPanel = () => {
       </FilterButtons>
 
       <AlertsList>
-        {filteredAlerts.map(alert => (
-          <AlertItem key={alert.id} severity={alert.severity}>
-            <AlertHeader>
-              <AlertTitle severity={alert.severity}>{alert.title}</AlertTitle>
-              <AlertTimestamp>{alert.timestamp}</AlertTimestamp>
-            </AlertHeader>
-            <AlertMessage>{alert.message}</AlertMessage>
-            <AlertAction>{alert.action}</AlertAction>
-            <AlertTags>
-              {alert.tags.map((tag, idx) => (
-                <Tag key={idx}>{tag}</Tag>
-              ))}
-            </AlertTags>
-          </AlertItem>
-        ))}
+        {filteredAlerts.length === 0 ? (
+          <LoadingMessage>No alerts for this filter</LoadingMessage>
+        ) : (
+          filteredAlerts.map(alert => (
+            <AlertItem
+              key={alert.id}
+              severity={alert.severity}
+              onClick={() => openArticle(alert.url)}
+            >
+              <AlertHeader>
+                <AlertTitle severity={alert.severity}>{alert.title}</AlertTitle>
+                <AlertTimestamp>{alert.timestamp}</AlertTimestamp>
+              </AlertHeader>
+              <AlertMessage>{alert.message.substring(0, 200)}...</AlertMessage>
+              <AlertTags>
+                {alert.tags.map((tag, idx) => (
+                  <Tag key={idx}>{tag}</Tag>
+                ))}
+              </AlertTags>
+            </AlertItem>
+          ))
+        )}
       </AlertsList>
     </Card>
   );

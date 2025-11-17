@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { getExampleTimestamp, getTodayFormatted } from '../utils/dateUtils';
+import { formatTimeAgo } from '../utils/dateUtils';
 
 const Card = styled.div`
   background: #1a1a1a;
@@ -137,205 +137,143 @@ const ImpactBadge = styled.div`
   };
 `;
 
-const DemoNotice = styled.div`
-  background: rgba(255, 107, 0, 0.1);
-  border: 1px solid #ff6b00;
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  color: #ff6b00;
-  font-size: 0.9rem;
+const LoadingMessage = styled.div`
+  color: #888;
   text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
 `;
+
+const ErrorMessage = styled.div`
+  color: #ff0000;
+  text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff0000;
+  border-radius: 6px;
+`;
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 const NewsIntegration = () => {
   const [filter, setFilter] = useState('all');
+  const [newsItems, setNewsItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const newsItems = [
-    {
-      id: 1,
-      source: 'SemiAnalysis',
-      title: 'TSMC N2 Yields Ahead of Schedule, Apple A19 Design Tape-Out Complete',
-      summary: 'TSMC 2nm GAA process showing 75-80% yields in risk production, 5-8% ahead of N3 ramp at same stage. Apple A19 for iPhone 17 Pro has taped out, with production starting Q2 2025. Nvidia Blackwell successor (B200 Ultra) also planned for N2.',
-      timestamp: getExampleTimestamp(3),
-      category: 'research',
-      impact: 'high',
-      tags: ['TSMC', 'Process Node', 'Apple', 'Nvidia'],
-      tickers: ['TSM', 'AAPL', 'NVDA']
-    },
-    {
-      id: 2,
-      source: 'Earnings Call',
-      title: 'Nvidia Q4 2024: Blackwell Demand "Insane", Margins Holding at 75%+',
-      summary: 'Jensen Huang: "Blackwell demand is insane... we have more demand than we can supply for the next 12 months." Gross margins at 75.3% despite competitive pressure. Guidance: Q1 2025 revenue $28-29B (vs consensus $27B).',
-      timestamp: getExampleTimestamp(5),
-      category: 'earnings',
-      impact: 'high',
-      tags: ['NVDA', 'Earnings', 'Blackwell', 'Revenue Beat'],
-      tickers: ['NVDA']
-    },
-    {
-      id: 3,
-      source: 'ArXiv',
-      title: 'New Paper: "Scaling Laws Hold to 10^26 FLOPs" - DeepMind',
-      summary: 'DeepMind researchers demonstrate scaling laws continue to hold with no saturation up to 10^26 FLOPs (10x current GPT-4 scale). Suggests room for 3-4 more model generations before hitting data walls. Validates thesis on continued capability gains.',
-      timestamp: getExampleTimestamp(8),
-      category: 'research',
-      impact: 'high',
-      tags: ['Scaling Laws', 'DeepMind', 'GOOGL', 'AGI Progress'],
-      tickers: ['GOOGL']
-    },
-    {
-      id: 4,
-      source: 'Bloomberg',
-      title: 'Microsoft to Spend $80B on AI Datacenters in 2025',
-      summary: 'Microsoft CFO confirms $80B CapEx for fiscal 2025, up from $55B in 2024. Majority earmarked for AI datacenter buildout globally. 40+ new datacenter regions planned. Bullish for Nvidia, Vertiv, datacenter REITs.',
-      timestamp: getExampleTimestamp(12),
-      category: 'news',
-      impact: 'high',
-      tags: ['MSFT', 'CapEx', 'Datacenter', 'Infrastructure'],
-      tickers: ['MSFT', 'NVDA', 'VRT', 'EQIX']
-    },
-    {
-      id: 5,
-      source: 'Dwarkesh Podcast',
-      title: 'Leopold Aschenbrenner: "AGI Timeline Moved Up to 2027"',
-      summary: 'Former OpenAI researcher Leopold updates AGI timeline from 2029 to 2027 based on faster-than-expected scaling progress. Cites GPT-5 internal benchmarks and compute buildout acceleration. Implications: CapEx surge continues, competitive pressure intensifies.',
-      timestamp: getExampleTimestamp(24),
-      category: 'podcast',
-      impact: 'high',
-      tags: ['AGI', 'Timeline', 'OpenAI', 'Leopold'],
-      tickers: ['MSFT', 'GOOGL']
-    },
-    {
-      id: 6,
-      source: 'Earnings Call',
-      title: 'AMD Q4 2024: MI300 Ramp Slower Than Expected, But Design Wins Growing',
-      summary: 'AMD reports $400M MI300 revenue in Q4 (below $600M whisper). However, announced 3 new hyperscaler design wins for 2025 deployment. Lisa Su: "Pipeline for 2025 is $4.5B, ahead of plan." Stock down 5% after hours.',
-      timestamp: getExampleTimestamp(24),
-      category: 'earnings',
-      impact: 'medium',
-      tags: ['AMD', 'MI300', 'Revenue Miss', 'Design Wins'],
-      tickers: ['AMD']
-    },
-    {
-      id: 7,
-      source: 'SemiAnalysis',
-      title: 'HBM Market Dynamics: SK Hynix Pricing Power Increasing',
-      summary: 'Analysis shows SK Hynix HBM3E ASPs up 35% Y/Y due to supply constraints. Micron ramping HBM3E but yield issues delaying volume production to Q3 2025. Samsung losing share (15% → 10%). Bullish for SK Hynix margins.',
-      timestamp: getExampleTimestamp(24),
-      category: 'research',
-      impact: 'medium',
-      tags: ['Memory', 'SK Hynix', 'Micron', 'HBM'],
-      tickers: ['MU']
-    },
-    {
-      id: 8,
-      source: 'Reuters',
-      title: 'US Tightens AI Chip Export Controls, H20 Variants Now Restricted',
-      summary: 'Biden administration expands China export controls to include Nvidia H20 and other "workaround" chips. Effective immediately. Nvidia China revenue (20% of total) at risk. May force further product redesigns or revenue hit.',
-      timestamp: getExampleTimestamp(48),
-      category: 'news',
-      impact: 'high',
-      tags: ['Geopolitical', 'NVDA', 'China', 'Export Controls'],
-      tickers: ['NVDA']
-    },
-    {
-      id: 9,
-      source: 'ArXiv',
-      title: 'Breakthrough: "Mixture of Experts at 100T Parameters" Shows 10x Efficiency Gains',
-      summary: 'Research from Meta demonstrates MoE architecture scaling to 100T parameters with 10x training efficiency vs dense models. Could extend runway before hitting compute/data walls. Implications: Models get bigger/cheaper faster.',
-      timestamp: getExampleTimestamp(48),
-      category: 'research',
-      impact: 'medium',
-      tags: ['Architecture', 'MoE', 'Meta', 'Efficiency'],
-      tickers: ['META', 'NVDA']
-    },
-    {
-      id: 10,
-      source: 'Earnings Call',
-      title: 'Google Q4 2024: Cloud Revenue +30% Y/Y, AI Driving Growth',
-      summary: 'Google Cloud revenue $11.4B (+30% Y/Y), beating estimates. Sundar Pichai: "AI workloads now 15% of cloud revenue, fastest-growing segment." Gemini Pro adoption accelerating. CapEx guidance: $75B for 2025.',
-      timestamp: getExampleTimestamp(72),
-      category: 'earnings',
-      impact: 'medium',
-      tags: ['GOOGL', 'Cloud', 'Revenue Beat', 'AI Growth'],
-      tickers: ['GOOGL']
-    },
-    {
-      id: 11,
-      source: 'SemiAnalysis',
-      title: 'Intel 18A Node Showing Progress: Panther Lake Test Chips Functional',
-      summary: 'Intel Panther Lake (18A process) test chips now functional and meeting targets. First external foundry customer (unnamed) placing orders for tape-out in Q2 2025. Still high execution risk but de-risks Intel turnaround thesis.',
-      timestamp: getExampleTimestamp(72),
-      category: 'research',
-      impact: 'low',
-      tags: ['Intel', '18A', 'Process Node', 'Foundry'],
-      tickers: ['INTC']
-    },
-    {
-      id: 12,
-      source: 'WSJ',
-      title: 'Natural Gas Prices Surge 25% as Datacenter Demand Spikes',
-      summary: 'Nat gas futures hit $4.80/MMBtu (up 25% M/M) as datacenter consumption grows 40% Y/Y. Hyperscalers scrambling for power contracts. Could impact datacenter economics if sustained above $5. Watch EQT, energy infrastructure plays.',
-      timestamp: getExampleTimestamp(96),
-      category: 'news',
-      impact: 'medium',
-      tags: ['Energy', 'Nat Gas', 'Datacenter Economics'],
-      tickers: ['EQT']
-    }
-  ];
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  const filteredNews = filter === 'all' ? newsItems : newsItems.filter(item => item.category === filter);
+        // Fetch news for semiconductor and AI related companies
+        const tickers = 'NVDA,AMD,TSM,ASML,INTC,MU,GOOGL,MSFT,META';
+        const topics = 'technology,earnings';
+
+        const response = await fetch(`${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=30`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch news');
+        }
+
+        const data = await response.json();
+        setNewsItems(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching news:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+
+    // Refresh news every 30 minutes
+    const interval = setInterval(fetchNews, 30 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const filteredNews = filter === 'all'
+    ? newsItems
+    : newsItems.filter(item => item.category === filter);
+
+  const openArticle = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardTitle>📰 News & Research Feed</CardTitle>
+        <LoadingMessage>Loading live news...</LoadingMessage>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardTitle>📰 News & Research Feed</CardTitle>
+        <ErrorMessage>
+          Failed to load news: {error}
+          <br />
+          <small>Please try refreshing the page</small>
+        </ErrorMessage>
+      </Card>
+    );
+  }
 
   return (
     <Card>
-      <CardTitle>📰 News & Research Feed</CardTitle>
-
-      <DemoNotice>
-        ⚠️ Demo Data - Displaying example news and research items with current timestamps ({getTodayFormatted()}). Live news integration coming soon.
-      </DemoNotice>
+      <CardTitle>📰 Live News & Research Feed</CardTitle>
 
       <FilterButtons>
         <FilterButton active={filter === 'all'} onClick={() => setFilter('all')}>
-          All Sources
+          All News ({newsItems.length})
         </FilterButton>
         <FilterButton active={filter === 'research'} onClick={() => setFilter('research')}>
-          Research (SemiAnalysis, ArXiv)
+          Research & Analysis
         </FilterButton>
         <FilterButton active={filter === 'earnings'} onClick={() => setFilter('earnings')}>
-          Earnings Calls
+          Earnings & Reports
         </FilterButton>
         <FilterButton active={filter === 'news'} onClick={() => setFilter('news')}>
-          News (Bloomberg, Reuters)
-        </FilterButton>
-        <FilterButton active={filter === 'podcast'} onClick={() => setFilter('podcast')}>
-          Podcasts
+          Breaking News
         </FilterButton>
       </FilterButtons>
 
       <NewsGrid>
-        {filteredNews.map(item => (
-          <NewsItem key={item.id} impact={item.impact}>
-            <NewsHeader>
-              <NewsSource>{item.source}</NewsSource>
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <ImpactBadge impact={item.impact}>{item.impact} impact</ImpactBadge>
-                <NewsTimestamp>{item.timestamp}</NewsTimestamp>
-              </div>
-            </NewsHeader>
-            <NewsTitle>{item.title}</NewsTitle>
-            <NewsSummary>{item.summary}</NewsSummary>
-            <NewsTags>
-              {item.tickers.map((ticker, idx) => (
-                <Tag key={idx} color="#ff6b00">{ticker}</Tag>
-              ))}
-              {item.tags.slice(0, 3).map((tag, idx) => (
-                <Tag key={idx}>{tag}</Tag>
-              ))}
-            </NewsTags>
-          </NewsItem>
-        ))}
+        {filteredNews.length === 0 ? (
+          <LoadingMessage>No news available for this filter</LoadingMessage>
+        ) : (
+          filteredNews.map(item => (
+            <NewsItem
+              key={item.id}
+              impact={item.impact}
+              onClick={() => openArticle(item.url)}
+            >
+              <NewsHeader>
+                <NewsSource>{item.source}</NewsSource>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <ImpactBadge impact={item.impact}>{item.impact} impact</ImpactBadge>
+                  <NewsTimestamp>{formatTimeAgo(new Date(item.timestamp))}</NewsTimestamp>
+                </div>
+              </NewsHeader>
+              <NewsTitle>{item.title}</NewsTitle>
+              <NewsSummary>{item.summary.substring(0, 200)}...</NewsSummary>
+              <NewsTags>
+                {item.tickers && item.tickers.slice(0, 4).map((ticker, idx) => (
+                  <Tag key={idx} color="#ff6b00">{ticker}</Tag>
+                ))}
+                {item.tags && item.tags.slice(0, 3).map((tag, idx) => (
+                  <Tag key={`tag-${idx}`}>{tag}</Tag>
+                ))}
+              </NewsTags>
+            </NewsItem>
+          ))
+        )}
       </NewsGrid>
     </Card>
   );
