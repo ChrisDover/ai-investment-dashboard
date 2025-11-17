@@ -2,6 +2,10 @@ const fetch = require('node-fetch');
 
 const ALPHA_VANTAGE_KEY = process.env.ALPHA_VANTAGE_API_KEY || 'ZAN2YWHAD299PEE8';
 
+// Simple in-memory cache (5 minute TTL)
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,6 +29,14 @@ export default async function handler(req, res) {
       symbolArray.map(async (symbol) => {
         try {
           const trimmedSymbol = symbol.trim();
+
+          // Check cache first
+          const cacheKey = trimmedSymbol;
+          const cached = cache.get(cacheKey);
+          if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+            return cached.data;
+          }
+
           const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${trimmedSymbol}&apikey=${ALPHA_VANTAGE_KEY}`;
 
           const response = await fetch(url);
@@ -37,13 +49,18 @@ export default async function handler(req, res) {
 
           const quote = data['Global Quote'];
 
-          return {
+          const quoteData = {
             symbol: trimmedSymbol,
             price: parseFloat(quote['05. price']),
             change: parseFloat(quote['10. change percent'].replace('%', '')),
             volume: parseInt(quote['06. volume']),
             previousClose: parseFloat(quote['08. previous close'])
           };
+
+          // Cache the result
+          cache.set(cacheKey, { data: quoteData, timestamp: Date.now() });
+
+          return quoteData;
         } catch (error) {
           console.error(`Error fetching quote for ${symbol}:`, error);
           return null;
