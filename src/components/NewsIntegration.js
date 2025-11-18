@@ -172,17 +172,21 @@ const NewsIntegration = () => {
         const tickers = 'NVDA,AMD,TSM,ASML,INTC,MU,GOOGL,MSFT,META';
         const topics = 'technology,earnings';
 
+        console.log('[NewsIntegration] Fetching news from:', `${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=30`);
         const response = await fetch(`${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=30`);
 
+        console.log('[NewsIntegration] Response status:', response.status, response.ok);
         if (!response.ok) {
           throw new Error('Failed to fetch news');
         }
 
         const data = await response.json();
+        console.log('[NewsIntegration] Received news items:', data.length, 'items');
+        console.log('[NewsIntegration] First item:', data[0]);
         setNewsItems(data);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching news:', err);
+        console.error('[NewsIntegration] Error fetching news:', err);
         setError(err.message);
         setLoading(false);
       }

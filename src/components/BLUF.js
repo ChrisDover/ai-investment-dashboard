@@ -272,10 +272,13 @@ const BLUF = () => {
         // Fetch live news for takeaways
         const tickers = 'NVDA,AMD,TSM,ASML,INTC,MU,GOOGL,MSFT,META';
         const topics = 'technology,earnings';
+        console.log('[BLUF] Fetching news from:', `${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=20`);
         const response = await fetch(`${API_BASE_URL}/api/news?tickers=${tickers}&topics=${topics}&limit=20`);
 
+        console.log('[BLUF] Response status:', response.status, response.ok);
         if (response.ok) {
           const newsData = await response.json();
+          console.log('[BLUF] Received', newsData.length, 'news items');
 
           // Generate takeaways from high-impact news
           const newTakeaways = newsData
