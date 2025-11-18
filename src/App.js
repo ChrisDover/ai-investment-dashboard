@@ -133,8 +133,8 @@ function App() {
   return (
     <DashboardContainer>
       <Header>
-        <Title>SEMICONDUCTOR SUPERCYCLE DASHBOARD</Title>
-        <Subtitle>SemiAnalysis Investment Thesis | TSMC 2nm Tracking | Nvidia Blackwell | $1T Revenue Target by 2030</Subtitle>
+        <Title>AI INVESTMENT DASHBOARD</Title>
+        <Subtitle>Dwarkesh + SemiAnalysis Theses | Scaling to AGI by 2040 | Semiconductor Supercycle | TSMC 2nm | Nvidia Blackwell | $1T Revenue 2030</Subtitle>
       </Header>
 
       <GridContainer>

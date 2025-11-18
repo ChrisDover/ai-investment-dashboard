@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -158,8 +158,12 @@ const BulletPoints = styled.ul`
   }
 `;
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+
 const CompanyDeepDives = () => {
   const [expanded, setExpanded] = useState({});
+  const [livePrices, setLivePrices] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const toggleExpand = (ticker) => {
     setExpanded(prev => ({
@@ -167,6 +171,31 @@ const CompanyDeepDives = () => {
       [ticker]: !prev[ticker]
     }));
   };
+
+  // Fetch live pricing data
+  useEffect(() => {
+    const fetchLivePrices = async () => {
+      try {
+        const tickers = ['NVDA', 'TSM', 'AMD', 'MSFT'];
+        const response = await fetch(`${API_BASE_URL}/api/quotes?symbols=${tickers.join(',')}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          setLivePrices(data);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching live prices:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchLivePrices();
+
+    // Refresh every 5 minutes
+    const interval = setInterval(fetchLivePrices, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const companies = {
     NVDA: {
@@ -338,8 +367,14 @@ const CompanyDeepDives = () => {
                 <Ticker>{ticker}</Ticker>
                 <CompanyName>{company.name}</CompanyName>
                 <QuickMetrics>
-                  <QuickMetric><span>Price:</span>{company.quickMetrics.price}</QuickMetric>
-                  <QuickMetric><span>YTD:</span>{company.quickMetrics.ytd}</QuickMetric>
+                  <QuickMetric>
+                    <span>Price:</span>
+                    {livePrices[ticker] ? `$${livePrices[ticker].price.toFixed(2)}` : (loading ? 'Loading...' : company.quickMetrics.price)}
+                  </QuickMetric>
+                  <QuickMetric>
+                    <span>YTD:</span>
+                    {livePrices[ticker] ? `${livePrices[ticker].ytdReturn >= 0 ? '+' : ''}${livePrices[ticker].ytdReturn.toFixed(1)}%` : (loading ? 'Loading...' : company.quickMetrics.ytd)}
+                  </QuickMetric>
                   <QuickMetric><span>Position:</span>{company.quickMetrics.allocation}</QuickMetric>
                 </QuickMetrics>
               </CompanyInfo>
