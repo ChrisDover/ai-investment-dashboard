@@ -181,7 +181,12 @@ const CompanyDeepDives = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setLivePrices(data);
+          // Convert array to object keyed by symbol for easy lookup
+          const pricesObj = {};
+          data.forEach(quote => {
+            pricesObj[quote.symbol] = quote;
+          });
+          setLivePrices(pricesObj);
         }
         setLoading(false);
       } catch (error) {
@@ -206,7 +211,7 @@ const CompanyDeepDives = () => {
         allocation: '25%'
       },
       fundamentals: [
-        { label: 'Market Cap', value: '$3.5T', color: '#fff', borderColor: '#ff6b00' },
+        { label: 'Market Cap', value: '$4.5T', color: '#fff', borderColor: '#ff6b00' },
         { label: 'P/E Ratio', value: '68', color: '#fff', borderColor: '#00aaff' },
         { label: 'Gross Margin', value: '75.3%', color: '#00ff00', subtext: 'Target: >65%', borderColor: '#00ff00' },
         { label: 'DC Revenue Q3', value: '$30.8B', color: '#00ff00', subtext: '+112% Y/Y', borderColor: '#00ff00' },
@@ -372,8 +377,8 @@ const CompanyDeepDives = () => {
                     {livePrices[ticker] ? `$${livePrices[ticker].price.toFixed(2)}` : (loading ? 'Loading...' : company.quickMetrics.price)}
                   </QuickMetric>
                   <QuickMetric>
-                    <span>YTD:</span>
-                    {livePrices[ticker] ? `${livePrices[ticker].ytdReturn >= 0 ? '+' : ''}${livePrices[ticker].ytdReturn.toFixed(1)}%` : (loading ? 'Loading...' : company.quickMetrics.ytd)}
+                    <span>Change:</span>
+                    {livePrices[ticker] ? `${livePrices[ticker].change >= 0 ? '+' : ''}${livePrices[ticker].change.toFixed(2)}%` : (loading ? 'Loading...' : company.quickMetrics.ytd)}
                   </QuickMetric>
                   <QuickMetric><span>Position:</span>{company.quickMetrics.allocation}</QuickMetric>
                 </QuickMetrics>
